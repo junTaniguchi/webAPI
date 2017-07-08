@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<title>Edit Package Report Search</title>
+	</head>
+	<link type="text/css" rel="stylesheet"  href="/css/bootstrap.min.css" />
+	<link type="text/css" rel="stylesheet"  href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+	<style>
+		html{
+			font-family: arial, sans-serif;
+			margin-left: 15px;
+			margin-top: 20px;
+			margin-bottom: auto;
+		}
+		h1{
+			border-bottom: 3px solid black;
+			padding-bottom: 3px;
+			margin-right: 50%;
+			margin-bottom: 35px;
+		}
+		input{
+			width: 200px;
+			height: 20px;
+		}
+	</style>
+	<body>
+		<h1>Edit Package Report Search</h1>
+			<p>下記いずれかの方法で検索してください。</p>
+			<div ng-controller="mainCtrl" class="col-xs-6">
+				<section id="query">
+					<div class="col-sm-6" id="query_name">
+						<p>１：レポート名検索</p><br>
+						<label for="report">閲覧するレポートを選択してください。</label><br>
+						<select ng-model="report" ng-change="change_report()">
+							<option value="">ファイル選択なし</option>
+							<option value="EP100">EP100</option>
+							<option value="EP101">EP101</option>
+							<option value="EP102">EP102</option>
+							<option value="EP103">EP103</option>
+						</select>
+					</div>
+					<div class="col-sm-6" id="query_date">
+						<p>２：日付検索<br></p>
+						<label for="date">日付を選択してください。</label><br>
+						<input type="text" id="date" ng-model="date" ng-change="change_date()">
+					</div>
+
+					<p>
+						<!--
+						<button ng-click="ontheclick()">実行</button>
+						-->
+					</p>
+
+				<section id="view" class="col-xs-6">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>ファイル名</th>
+								<th>更新日時</th>
+								<th>テキスト</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="file in fileList">
+								<td>{{file.filename}}</td>
+								<td>{{file.filedate}}</td>
+								<td><a href="{{file.filePath}}"> {{file.filePath}}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+			</div>
+	</body>
+	<script src="/js/jquery-3.2.1.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/angular.min.js"></script>
+	<script type="text/javascript">
+	var app = angular.module('myApp', []);
+		app.controller('mainCtrl', function($scope, $http) {
+			//レポート名称変更
+			$scope.change_report = function(){
+				//urlを定義
+				var url = "http://localhost:4567/filepath?";
+				console.log("$scope.report :" + $scope.report);
+
+				//クエリーパラメータ作成
+				var queries = "fileName=" + $scope.report;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					$scope.fileList = data;
+					console.log("data : " + $scope.fileList);
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+					console.log("headers : " + headers);
+					console.log("status : " + status);
+					console.log("config : " + config);
+					console.log("data : " + data);
+				});
+			};
+			//更新日時変更
+			$scope.change_date = function(){
+				//dateをyyyymmddフォーマットへ変換
+				if ($scope.date != null){
+					var base_date = $scope.date;
+					console.log("$scope.date :" + base_date);
+					//yyyyへ変換
+					var yyyy = base_date.slice(0, 4);
+					//mmへ変換
+					var mm = base_date.slice(5, 7);
+					//ddへ変換
+					var dd = base_date.slice(8, 10);
+					//yyyymmddへ変換
+					var yyyymmdd = yyyy + mm + dd;
+					console.log(yyyymmdd);
+				}
+
+				//urlを定義
+				var url = "http://localhost:4567/filepath?";
+
+				//クエリーパラメータ作成
+				var queries = "fileDate=" + yyyymmdd;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					$scope.fileList = data;
+					console.log("data : " + $scope.fileList);
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+					console.log("headers : " + headers);
+					console.log("status : " + status);
+					console.log("config : " + config);
+					console.log("data : " + data);
+				});
+			};
+	});
+	</script>
+	<script>
+	$(function() {
+	    $('#date').datepicker();
+	});
+	</script>
+</html>

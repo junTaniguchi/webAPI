@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="myApp">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<title>Edit Package Report Search</title>
+	</head>
+	<link rel="stylesheet" href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+	<style>
+		html{
+			font-family: arial, sans-serif;
+			margin-left: 15px;
+			margin-top: 20px;
+		}
+		body{
+		}
+		h1{
+			border-bottom: 3px solid black;
+			padding-bottom: 3px;
+			margin-right: 25%;
+			margin-bottom: 35px;
+		}
+		input{
+			padding-left: 45px;
+		}
+		section{
+			padding-top: 25px;
+		}
+		select{
+			padding-left: 45px;
+		}
+		label{
+			padding-left: 30px;
+		}
+		#search{
+			margin-bottom: -10px;
+		}
+	</style>
+	<body>
+		<h1>Edit Package Report Search</h1>
+			<p>下記いずれかの方法で検索してください。</p>
+			<div ng-controller="mainCtrl">
+				<div class="row" id="search">
+					<section id="query">
+						<div class="col-md-4" id="query_name">
+							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください。</small></h4>
+							<!--<label for="report">閲覧するレポートを選択してください。</label><br>-->
+							<select ng-model="report" id="report" class="form-control" ng-change="change_report()">
+								<option value="">ファイル選択なし</option>
+								<option value="EP100">EP100</option>
+								<option value="EP101">EP101</option>
+								<option value="EP102">EP102</option>
+								<option value="EP103">EP103</option>
+							</select>
+						</div>
+						<div class="col-xs-offset-2 col-md-4" id="query_date">
+							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
+							<!--<label for="date">日付を選択してください。</label>-->
+							<input type="text" id="date" class="form-control datepicker" ng-model="date" ng-change="change_date()">
+						</div>
+					</section>
+				</div>
+				<div class="row">
+					<section id="result_table">
+						<div class="col-md-6">
+							<h4>検索結果</h4>
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>ファイル名</th>
+										<th>更新日時</th>
+										<th>テキスト</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="file in file_list">
+										<td>{{file.file_name}}</td>
+										<td>{{file.file_date}}</td>
+										<!--<td>{{file.file_path}}</td>-->
+										<td><button class="btn btn-primary" ng-click="text_check(file.file_date)">確認</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-md-6">
+							<h4>レポート詳細</h4>
+							<tr ng-repeat="line_text in report">
+								<td>{{$index}}</td>
+								<td>{{report}}</td>
+							</tr>
+					</div>
+					</section>
+				</div>
+			</div>
+	</body>
+	<script src="/assets/javascripts/jquery-1.12.4.js"></script>
+	<script src="/assets/javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.ja.min.js"></script>
+	<script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+	<!--<script src="/assets/javascripts/angular.min.js"></script>-->
+	<script type="text/javascript">
+	var app = angular.module('myApp', []);
+		app.controller('mainCtrl', function($scope, $http) {
+			//レポート名称変更
+			$scope.change_report = function(){
+				//urlを定義
+				var url = "http://localhost:9000/search?";
+				console.log("$scope.report :" + $scope.report);
+
+				//クエリーパラメータ作成
+				var queries = "file_name=" + $scope.report;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					$scope.file_list = data;
+					console.log("data : " + $scope.file_list);
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+					console.log("headers : " + headers);
+					console.log("status : " + status);
+					console.log("config : " + config);
+					console.log("data : " + data);
+				});
+			};
+
+
+			//更新日時変更
+			$scope.change_date = function(){
+				//dateをyyyymmddフォーマットへ変換
+				if ($scope.date != null){
+					var base_date = $scope.date;
+					console.log("$scope.date :" + base_date);
+					//yyyyへ変換
+					var yyyy = base_date.slice(0, 4);
+					//mmへ変換
+					var mm = base_date.slice(5, 7);
+					//ddへ変換
+					var dd = base_date.slice(8, 10);
+					//yyyymmddへ変換
+					var yyyymmdd = yyyy + mm + dd;
+					console.log(yyyymmdd);
+				}
+
+				//urlを定義
+				var url = "http://localhost:9000/search?";
+
+				//クエリーパラメータ作成
+				var queries = "file_date=" + yyyymmdd;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					$scope.file_list = data;
+					console.log("data : " + $scope.file_list);
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+					console.log("headers : " + headers);
+					console.log("status : " + status);
+					console.log("config : " + config);
+					console.log("data : " + data);
+				});
+			};
+
+
+			//ファイルのテキストを確認
+			$scope.text_check = function(val){
+				$scope.report = val;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+	});
+
+	</script>
+	<script>
+		$('.datepicker').datepicker({
+				format: "yyyy-mm-dd",
+				clearBtn: true,
+				todayBtn: "linked",
+				autoclose: true,
+				todayHighlight: true,
+				language:	"ja"
+		});
+	</script>
+</html>

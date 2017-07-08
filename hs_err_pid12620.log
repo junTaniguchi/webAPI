@@ -1,0 +1,206 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 945216 bytes for Chunk::new
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (allocation.cpp:390), pid=12620, tid=0x00000000000026e8
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_131-b11) (build 1.8.0_131-b11)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.131-b11 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000000016325000):  JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=9960, stack(0x00000000169a0000,0x0000000016aa0000)]
+
+Stack: [0x00000000169a0000,0x0000000016aa0000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+Current CompileTask:
+C2:   2087  947   !   4      
+[error occurred during error reporting (printing current compile task), id 0xe0000001]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00000000163a4800 JavaThread "Service Thread" daemon [_thread_blocked, id=10236, stack(0x0000000016f70000,0x0000000017070000)]
+  0x000000001632d800 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=8892, stack(0x0000000016d50000,0x0000000016e50000)]
+  0x0000000016329000 JavaThread "C2 CompilerThread1" daemon [_thread_in_native, id=11668, stack(0x0000000016c10000,0x0000000016d10000)]
+=>0x0000000016325000 JavaThread "C2 CompilerThread0" daemon [_thread_in_native, id=9960, stack(0x00000000169a0000,0x0000000016aa0000)]
+  0x0000000016321000 JavaThread "Attach Listener" daemon [_thread_blocked, id=1152, stack(0x0000000016ab0000,0x0000000016bb0000)]
+  0x0000000016320800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=7324, stack(0x00000000167d0000,0x00000000168d0000)]
+  0x00000000150cf000 JavaThread "Finalizer" daemon [_thread_blocked, id=11720, stack(0x0000000016210000,0x0000000016310000)]
+  0x0000000015087800 JavaThread "Reference Handler" daemon [_thread_blocked, id=3696, stack(0x0000000015f10000,0x0000000016010000)]
+  0x0000000002359800 JavaThread "main" [_thread_in_vm, id=9436, stack(0x00000000024e0000,0x00000000025e0000)]
+
+Other Threads:
+  0x0000000015080000 VMThread [stack: 0x0000000016060000,0x0000000016160000] [id=12192]
+  0x00000000163da800 WatcherThread [stack: 0x0000000017220000,0x0000000017320000] [id=13244]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 153088K, used 79060K [0x00000000eab00000, 0x00000000f5580000, 0x0000000100000000)
+  eden space 131584K, 60% used [0x00000000eab00000,0x00000000ef8353a0,0x00000000f2b80000)
+  from space 21504K, 0% used [0x00000000f4080000,0x00000000f4080000,0x00000000f5580000)
+  to   space 21504K, 0% used [0x00000000f2b80000,0x00000000f2b80000,0x00000000f4080000)
+ ParOldGen       total 349696K, used 0K [0x00000000c0000000, 0x00000000d5580000, 0x00000000eab00000)
+  object space 349696K, 0% used [0x00000000c0000000,0x00000000c0000000,0x00000000d5580000)
+ Metaspace       used 17471K, capacity 17806K, committed 18048K, reserved 1064960K
+  class space    used 3077K, capacity 3182K, committed 3200K, reserved 1048576K
+
+Card table byte_map: [0x0000000011a20000,0x0000000011c30000] byte_map_base: 0x0000000011420000
+
+Marking Bits: (ParMarkBitMap*) 0x000000007056c720
+ Begin Bits: [0x00000000124f0000, 0x00000000134f0000)
+ End Bits:   [0x00000000134f0000, 0x00000000144f0000)
+
+Polling page: 0x0000000000230000
+
+CodeCache: size=245760Kb used=3232Kb max_used=3232Kb free=242527Kb
+ bounds [0x0000000002660000, 0x0000000002990000, 0x0000000011660000]
+ total_blobs=1341 nmethods=988 adapters=265
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 2.005 Thread 0x000000001632d800  984       3       scala.collection.generic.Growable$class::$plus$plus$eq (21 bytes)
+Event: 2.005 Thread 0x000000001632d800 nmethod 984 0x0000000002985f50 code [0x0000000002986100, 0x00000000029866a8]
+Event: 2.005 Thread 0x000000001632d800  985       3       scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1::<init> (22 bytes)
+Event: 2.005 Thread 0x000000001632d800 nmethod 985 0x00000000029858d0 code [0x0000000002985a60, 0x0000000002985dc8]
+Event: 2.006 Thread 0x000000001632d800  986       3       scala.collection.mutable.WrappedArray::foreach (6 bytes)
+Event: 2.007 Thread 0x000000001632d800 nmethod 986 0x0000000002985550 code [0x00000000029856c0, 0x0000000002985848]
+Event: 2.013 Thread 0x000000001632d800  987       1       sbt.Scope$::ThisScope (5 bytes)
+Event: 2.014 Thread 0x000000001632d800 nmethod 987 0x0000000002985290 code [0x00000000029853e0, 0x00000000029854f0]
+Event: 2.028 Thread 0x000000001632d800  988       1       sbt.SettingKey$$anon$4::key (5 bytes)
+Event: 2.028 Thread 0x000000001632d800 nmethod 988 0x0000000002984dd0 code [0x0000000002984f20, 0x0000000002985030]
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (10 events):
+Event: 1.826 Thread 0x0000000002359800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00000000028c5e00 method=sun.misc.URLClassPath.getResource(Ljava/lang/String;Z)Lsun/misc/Resource; @ 62
+Event: 1.841 Thread 0x0000000002359800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000280b38c method=sun.misc.URLClassPath.getLoader(I)Lsun/misc/URLClassPath$Loader; @ 239
+Event: 1.854 Thread 0x0000000002359800 Uncommon trap: reason=unstable_if action=reinterpret pc=0x00000000028b602c method=java.util.concurrent.ConcurrentHashMap.putVal(Ljava/lang/Object;Ljava/lang/Object;Z)Ljava/lang/Object; @ 181
+Event: 1.856 Thread 0x0000000002359800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000280b354 method=sun.misc.URLClassPath.getLoader(I)Lsun/misc/URLClassPath$Loader; @ 94
+Event: 1.879 Thread 0x0000000002359800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000000280b38c method=sun.misc.URLClassPath.getLoader(I)Lsun/misc/URLClassPath$Loader; @ 239
+Event: 1.913 Thread 0x0000000002359800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x0000000002809a08 method=sun.misc.URLClassPath.getLoader(I)Lsun/misc/URLClassPath$Loader; @ 94
+Event: 2.005 Thread 0x0000000002359800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x0000000002967140 method=scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable; @ 5
+Event: 2.005 Thread 0x0000000002359800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x0000000002967140 method=scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable; @ 5
+Event: 2.005 Thread 0x0000000002359800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x0000000002967140 method=scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable; @ 5
+Event: 2.005 Thread 0x0000000002359800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x0000000002967140 method=scala.collection.generic.Growable$$anonfun$$plus$plus$eq$1.apply(Ljava/lang/Object;)Lscala/collection/generic/Growable; @ 5
+
+Internal exceptions (7 events):
+Event: 0.031 Thread 0x0000000002359800 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.defineClass(Ljava/lang/String;[BII)Ljava/lang/Class; name or signature does not match> (0x00000000eab07ca8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\
+Event: 0.031 Thread 0x0000000002359800 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.prefetchRead(Ljava/lang/Object;J)V name or signature does not match> (0x00000000eab07f90) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims
+Event: 0.220 Thread 0x0000000002359800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000ead5e4d8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims\jvm.cpp, line 1390]
+Event: 0.220 Thread 0x0000000002359800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000ead5eab8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims\jvm.cpp, line 1390]
+Event: 0.221 Thread 0x0000000002359800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000ead625b8) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims\jvm.cpp, line 1390]
+Event: 0.221 Thread 0x0000000002359800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000ead62b98) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims\jvm.cpp, line 1390]
+Event: 1.318 Thread 0x0000000002359800 Exception <a 'java/io/FileNotFoundException'> (0x00000000ecde3680) thrown at [C:\re\workspace\8-2-build-windows-amd64-cygwin\jdk8u131\8869\hotspot\src\share\vm\prims\jni.cpp, line 709]
+
+Events (10 events):
+Event: 2.040 loading class sbt/ScopeFilter$$anon$2
+Event: 2.040 loading class sbt/ScopeFilter$$anon$2 done
+Event: 2.040 loading class sbt/ScopeFilter$$anon$3
+Event: 2.040 loading class sbt/ScopeFilter$$anon$3 done
+Event: 2.040 loading class sbt/ScopeFilter$$anon$4
+Event: 2.040 loading class sbt/ScopeFilter$$anon$4 done
+Event: 2.041 loading class sbt/ScopeFilter$$anon$5
+Event: 2.041 loading class sbt/ScopeFilter$$anon$5 done
+Event: 2.041 loading class sbt/ScopeFilter$$anon$1
+Event: 2.041 loading class sbt/ScopeFilter$$anon$1 done
+
+
+Dynamic libraries:
+0x000000013fa40000 - 0x000000013fa77000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\java.exe
+0x0000000077480000 - 0x000000007762a000 	C:\Windows\SYSTEM32\ntdll.dll
+0x0000000077360000 - 0x000000007747f000 	C:\Windows\system32\kernel32.dll
+0x000007fefd460000 - 0x000007fefd4ca000 	C:\Windows\system32\KERNELBASE.dll
+0x000007fefdac0000 - 0x000007fefdb9b000 	C:\Windows\system32\ADVAPI32.dll
+0x000007fefdba0000 - 0x000007fefdc3f000 	C:\Windows\system32\msvcrt.dll
+0x000007fefdd30000 - 0x000007fefdd4f000 	C:\Windows\SYSTEM32\sechost.dll
+0x000007fefd910000 - 0x000007fefda3d000 	C:\Windows\system32\RPCRT4.dll
+0x0000000077260000 - 0x000000007735a000 	C:\Windows\system32\USER32.dll
+0x000007feff010000 - 0x000007feff077000 	C:\Windows\system32\GDI32.dll
+0x000007fefdd20000 - 0x000007fefdd2e000 	C:\Windows\system32\LPK.dll
+0x000007fefd840000 - 0x000007fefd90a000 	C:\Windows\system32\USP10.dll
+0x000007fefbb30000 - 0x000007fefbd24000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.7601.18837_none_fa3b1e3d17594757\COMCTL32.dll
+0x000007feff2c0000 - 0x000007feff331000 	C:\Windows\system32\SHLWAPI.dll
+0x000007fefdd50000 - 0x000007fefdd7e000 	C:\Windows\system32\IMM32.DLL
+0x000007fefd730000 - 0x000007fefd839000 	C:\Windows\system32\MSCTF.dll
+0x0000000078d80000 - 0x0000000078e52000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\msvcr100.dll
+0x000000006fd50000 - 0x00000000705ec000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\server\jvm.dll
+0x000007fefa7e0000 - 0x000007fefa7e9000 	C:\Windows\system32\WSOCK32.dll
+0x000007fefefc0000 - 0x000007feff00d000 	C:\Windows\system32\WS2_32.dll
+0x000007feff120000 - 0x000007feff128000 	C:\Windows\system32\NSI.dll
+0x000007fefafb0000 - 0x000007fefafeb000 	C:\Windows\system32\WINMM.dll
+0x000007fefc020000 - 0x000007fefc02c000 	C:\Windows\system32\VERSION.dll
+0x0000000077650000 - 0x0000000077657000 	C:\Windows\system32\PSAPI.DLL
+0x00000000580c0000 - 0x00000000580cf000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\verify.dll
+0x0000000051fc0000 - 0x0000000051fe9000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\java.dll
+0x0000000051f70000 - 0x0000000051f86000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\zip.dll
+0x000007fefe050000 - 0x000007fefedda000 	C:\Windows\system32\SHELL32.dll
+0x000007fefd530000 - 0x000007fefd72c000 	C:\Windows\system32\ole32.dll
+0x000007fefd170000 - 0x000007fefd17f000 	C:\Windows\system32\profapi.dll
+0x00000000580a0000 - 0x00000000580ba000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\net.dll
+0x000007fefc900000 - 0x000007fefc955000 	C:\Windows\system32\mswsock.dll
+0x000007fefc8f0000 - 0x000007fefc8f7000 	C:\Windows\System32\wship6.dll
+0x0000000051f30000 - 0x0000000051f41000 	C:\Users\JunTaniguchi\tools\pleiades\eclipse\jre\jre\bin\nio.dll
+0x000007fefcb50000 - 0x000007fefcb68000 	C:\Windows\system32\CRYPTSP.dll
+0x000007fefc6d0000 - 0x000007fefc717000 	C:\Windows\system32\rsaenh.dll
+0x000007fefd1f0000 - 0x000007fefd20e000 	C:\Windows\system32\USERENV.dll
+0x000007fefcfd0000 - 0x000007fefcfdf000 	C:\Windows\system32\CRYPTBASE.dll
+0x000007fefac30000 - 0x000007fefac57000 	C:\Windows\system32\IPHLPAPI.DLL
+0x000007fefac20000 - 0x000007fefac2b000 	C:\Windows\system32\WINNSI.DLL
+0x000007fefa560000 - 0x000007fefa578000 	C:\Windows\system32\dhcpcsvc.DLL
+0x000007fefa4e0000 - 0x000007fefa4f1000 	C:\Windows\system32\dhcpcsvc6.DLL
+0x000007fefac60000 - 0x000007fefac6a000 	C:\Users\JunTaniguchi\AppData\Local\Temp\jansi-64-1-2589276780680857659.11
+
+VM Arguments:
+jvm_args: -Xms512M -Xmx1024M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=256M -Dfile.encoding=UTF-8 -Dinput.encoding=Cp1252 -Dplay.version=2.2.3 -Dsbt.ivy.home=C:\Users\JunTaniguchi\tools\play-2.2.3\framework\..\repository -Dplay.home=C:\Users\JunTaniguchi\tools\play-2.2.3\framework\. -Dsbt.boot.properties=file:///C:/Users/JunTaniguchi/tools/play-2.2.3/framework/sbt/sbt.boot.properties -Dsbt.scala.version=2.10.3 
+java_command: C:\Users\JunTaniguchi\tools\play-2.2.3\framework\sbt\sbt-launch.jar run
+java_class_path (initial): C:\Users\JunTaniguchi\tools\play-2.2.3\framework\sbt\sbt-launch.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_112
+CLASSPATH=.
+PATH=C:/Users/JunTaniguchi/tools/pleiades/eclipse/jre/bin/../jre/bin/server;C:/Users/JunTaniguchi/tools/pleiades/eclipse/jre/bin/../jre/bin;C:/Users/JunTaniguchi/tools/pleiades/eclipse/jre/bin/../jre/lib/amd64;C:\Program Files\Trend Micro\AMSP\;C:\Perl64\site\bin;C:\Perl64\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live\;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live\;C:\Windows\system32\;C:\Windows\;C:\Windows\System32\Wbem\;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared\;C:\java\jdk1.7.0_09\bin\;C:\Program Files\ibm\gsk8\lib64\;C:\Program Files (x86)\ibm\gsk8\lib\;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\;C:\ProgramData\chocolatey\bin\;C:\Program Files (x86)\Skype\Phone\\;C:\Program Files\nodejs\\;C:\Program Files (x86)\vim\vim74\;C:\tools\cygwin\bin\;C:\Program Files\Bitcoin\daemon;C:\ProgramData\chocolatey;C:\Program Files\Java\jdk1.8.0_112\bin;C:\;rogram Files\Microsoft SQL Server\130\Tools\Binn\;C:\Go\bin;C:\MinGW\bin;C:\PhantomJS\bin\;C:\Casperjs\bin\;C:\OpenSSH-Win32\;C:\Program Files\TortoiseGit\bin;C:\Program Files\Git\cmd;C:\Program Files\Docker Toolbox\;C:\HashiCorp\Vagrant\bin;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Users\JunTaniguchi\tools\play-2.2.3;C:\Ruby23-x64\bin;C:\Users\JunTaniguchi\Anaconda2;C:\Users\JunTaniguchi\Anaconda2\Scripts;C:\Users\JunTaniguchi\Anaconda2\Library\bin;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Go\bin;C:\Program Files\Docker Toolbox;C:\Users\JunTaniguchi\tools\pleiades\eclipse;
+USERNAME=JunTaniguchi
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 (6.1.7601.23796)
+
+CPU:total 4 (initial active 4) (4 cores per cpu, 1 threads per core) family 6 model 42 stepping 7, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, clmul, tsc, tscinvbit
+
+Memory: 4k page, physical 8231784k(804288k free), swap 9652344k(4584k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.131-b11) for windows-amd64 JRE (1.8.0_131-b11), built on Mar 15 2017 01:23:53 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Sun Jul 09 01:37:23 2017
+elapsed time: 2 seconds (0d 0h 0m 2s)
+
