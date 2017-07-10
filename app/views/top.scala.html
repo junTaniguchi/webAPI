@@ -81,12 +81,12 @@
 				<div class="row">
 					<section id="result_table">
 						<div class="col-md-6">
-							<h4>検索結果</h4>
+							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
 							<div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div>
 							<div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div>
 							<div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div>
 							<!--<div ng-class="{redColor:isRed}" role="alert" ng-bind="message"></div>-->
-							<table class="table table-hover">
+							<table class="table table-hover" ng-init="view_init()" ng-show="view">
 								<thead>
 									<tr>
 										<th>ファイル名</th>
@@ -106,17 +106,17 @@
 						</div>
 
 						<div class="col-md-6">
-							<h4>レポート詳細</h4>
+							<h4 ng-init="text_line_init()" ng-show="text_line">レポート詳細</h4>
 							<table class="report_text">
 								<thead class="report_text">
 									<tr>
-										<th class="report_text">行数</th>
-										<th class="report_text">テキスト</th>
+										<th ng-init="text_line_init()" ng-show="text_line">行数</th>
+										<th ng-init="text_line_init()" ng-show="text_line">テキスト</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr ng-repeat="line_text in text">
-										<td class="report_text" ng-cloak>{{$index}}</td>
+										<td class="report_text" ng-cloak>{{$index+1}}</td>
 										<td class="report_text" ng-cloak>{{line_text}}</td>
 									</tr>
 								<tbody>
@@ -155,6 +155,9 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
+						//テーブルヘッダーを表示
+						$scope.view = true;
+
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
@@ -217,6 +220,9 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
+						//テーブルヘッダーを表示
+						$scope.view = true;
+
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
@@ -243,17 +249,28 @@
 				});
 			};
 
-			//ファイルのテキストを確認
-			$scope.text_check = function(val){
-				$scope.text = val;
-				//angular.element(document.querySelector('#report')).text(val);
-			};
-
 			//アラートメッセージ判定の初期化
 			$scope.alert_init = function(){
 				$scope.success = false;
 				$scope.info = false;
 				$scope.danger = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+			//テーブルヘッダーの表示コントロールの初期化
+			$scope.view_init = function(){
+				$scope.view = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+			//テーブルヘッダーの表示コントロールの初期化
+			$scope.text_line_init = function(){
+				$scope.text_line = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+			//ファイルのテキストを確認
+			$scope.text_check = function(val){
+				$scope.text = val;
 				//angular.element(document.querySelector('#report')).text(val);
 			};
 
