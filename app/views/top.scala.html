@@ -78,6 +78,10 @@
 					<section id="result_table">
 						<div class="col-md-6">
 							<h4>検索結果</h4>
+							<div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div>
+							<div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div>
+							<div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div>
+							<!--<div ng-class="{redColor:isRed}" role="alert" ng-bind="message"></div>-->
 							<table class="table table-hover">
 								<thead>
 									<tr>
@@ -88,8 +92,8 @@
 								</thead>
 								<tbody>
 									<tr ng-repeat="file in file_list">
-										<td>{{file.file_name}}</td>
-										<td>{{file.file_date}}</td>
+										<td ng-cloak>{{file.file_name}}</td>
+										<td ng-cloak>{{file.file_date}}</td>
 										<!--<td>{{file.file_path}}</td>-->
 										<td><button class="btn btn-primary" ng-click="text_check(file.file_date)">確認</button></td>
 									</tr>
@@ -100,8 +104,8 @@
 						<div class="col-md-6">
 							<h4>レポート詳細</h4>
 							<tr ng-repeat="line_text in text">
-								<td>{{$index}}</td>
-								<td>{{line_text}}</td>
+								<td ng-cloak>{{$index}}</td>
+								<td ng-cloak>{{line_text}}</td>
 							</tr>
 					</div>
 					</section>
@@ -136,16 +140,30 @@
 				})
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
-					$scope.file_list = data;
-					console.log("data : " + $scope.file_list);
+					if (data.length > 0) {
+						$scope.file_list = data;
+						console.log("data : " + $scope.file_list);
+						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
+						$scope.success = true;
+						$scope.info = false;
+						$scope.danger = false;
+					} else {
+						$scope.message = "該当するレコードが見つかりません。";
+						$scope.success = false;
+						$scope.info = true;
+						$scope.danger = false;
+					}
 				})
 				//webAPIの呼び出しに失敗
 				.error(function(data, status, headers, config){
 					console.log("失敗");
 					console.log("headers : " + headers);
 					console.log("status : " + status);
-					//console.log("config : " + config);
-					//console.log("data : " + data);
+					console.log("config : " + config);
+					$scope.message = "サーバとの通信に失敗しました。";
+					$scope.success = false;
+					$scope.info = false;
+					$scope.danger = true;
 				});
 			};
 
@@ -184,23 +202,44 @@
 				})
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
-					$scope.file_list = data;
-					console.log("data : " + $scope.file_list);
+					if (data.length > 0) {
+						$scope.file_list = data;
+						console.log("data : " + $scope.file_list);
+						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
+						$scope.success = true;
+						$scope.info = false;
+						$scope.danger = false;
+					} else {
+						$scope.message = "該当するレコードが見つかりません。";
+						$scope.success = false;
+						$scope.info = true;
+						$scope.danger = false;
+					}
 				})
 				//webAPIの呼び出しに失敗
 				.error(function(data, status, headers, config){
 					console.log("失敗");
 					console.log("headers : " + headers);
 					console.log("status : " + status);
-					//console.log("config : " + config);
-					//console.log("data : " + data);
+					console.log("config : " + config);
+					$scope.message = "サーバとの通信に失敗しました。";
+					$scope.success = false;
+					$scope.info = false;
+					$scope.danger = true;
 				});
 			};
-
 
 			//ファイルのテキストを確認
 			$scope.text_check = function(val){
 				$scope.text = val;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+			//アラートメッセージ判定の初期化
+			$scope.alert_init = function(){
+				$scope.success = false;
+				$scope.info = false;
+				$scope.danger = false;
 				//angular.element(document.querySelector('#report')).text(val);
 			};
 
