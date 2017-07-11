@@ -7,91 +7,145 @@
 		<meta http-equiv="expires" content="0" />
 		<title>Edit Package Report Search</title>
 	</head>
-	<link type="text/css" rel="stylesheet"  href="/css/bootstrap.min.css" />
-	<link type="text/css" rel="stylesheet"  href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css" />
+	<link rel="stylesheet" href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
 	<style>
 		html{
 			font-family: arial, sans-serif;
 			margin-left: 15px;
 			margin-top: 20px;
-			margin-bottom: auto;
+		}
+		body{
 		}
 		h1{
 			border-bottom: 3px solid black;
 			padding-bottom: 3px;
-			margin-right: 50%;
+			margin-right: 25%;
 			margin-bottom: 35px;
 		}
 		input{
-			width: 200px;
-			height: 20px;
+			padding-left: 45px;
+		}
+		section{
+			padding-top: 25px;
+		}
+		select{
+			padding-left: 45px;
+		}
+		label{
+			padding-left: 30px;
+		}
+		#search{
+			margin-bottom: -10px;
+		}
+		.report_text{
+			font-family: "ＭＳ ゴシック",sans-serif;
+			border: none;
 		}
 	</style>
 	<body>
 		<h1>Edit Package Report Search</h1>
 			<p>下記いずれかの方法で検索してください。</p>
-			<div ng-controller="mainCtrl" class="col-xs-6">
-				<section id="query">
-					<div class="col-sm-6" id="query_name">
-						<p>１：レポート名検索</p><br>
-						<label for="report">閲覧するレポートを選択してください。</label><br>
-						<select ng-model="report" ng-change="change_report()">
-							<option value="">ファイル選択なし</option>
-							<option value="EP100">EP100</option>
-							<option value="EP101">EP101</option>
-							<option value="EP102">EP102</option>
-							<option value="EP103">EP103</option>
-						</select>
+			<div ng-controller="mainCtrl">
+				<div class="row" id="search">
+					<section id="query">
+						<div class="col-md-4" id="query_name">
+							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください。</small></h4>
+							<!--<label for="report">閲覧するレポートを選択してください。</label><br>-->
+							<div class="input-group">
+								<select ng-model="report" id="report" class="form-control">
+									<option value="">ファイル選択なし</option>
+									<option value="EP100">EP100</option>
+									<option value="EP101">EP101</option>
+									<option value="EP102">EP102</option>
+									<option value="EP103">EP103</option>
+								</select>
+								<span class="input-group-btn">
+									<button class="btn btn-primary" ng-click="change_report()">実行</button>
+									<i class='glyphicon glyphicon-search'></i>
+									</button>
+								</span>
+							</div>
+						</div>
+						<div class="col-xs-offset-2 col-md-4" id="query_date">
+							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
+							<!--<label for="date">日付を選択してください。</label>-->
+							<div class="input-group">
+								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd"ng-minlength="8" ng-maxlength="8">
+								<span class="input-group-btn">
+									<button class="btn btn-primary" ng-click="change_date()">実行</button>
+									<i class='glyphicon glyphicon-search'></i>
+									</button>
+								</span>
+								<span ng-show="myForm.name.$error.minlength">8桁の数値(yyyymmdd)を入力してください</span>
+								<span ng-show="myForm.name.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
+							</div>
+					</section>
+				</div>
+				<div class="row">
+					<section id="result_table">
+						<div class="col-md-6">
+							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
+							<div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div>
+							<div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div>
+							<div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div>
+							<!--<div ng-class="{redColor:isRed}" role="alert" ng-bind="message"></div>-->
+							<table class="table table-hover" ng-init="view_init()" ng-show="view">
+								<thead>
+									<tr>
+										<th>ファイル名</th>
+										<th>更新日時</th>
+										<th>テキスト</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="file in file_list">
+										<td ng-cloak>{{file.file_name}}</td>
+										<td ng-cloak>{{file.file_date}}</td>
+										<!--<td>{{file.file_path}}</td>-->
+										<td><button class="btn btn-primary" ng-click="text_check(file.file_date)">確認</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-md-6">
+							<h4 ng-init="text_line_init()" ng-show="text_line">レポート詳細</h4>
+							<table class="report_text">
+								<thead class="report_text">
+									<tr>
+										<th ng-init="text_line_init()" ng-show="text_line">行数</th>
+										<th ng-init="text_line_init()" ng-show="text_line">テキスト</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="line_text in text">
+										<td class="report_text" ng-cloak>{{$index+1}}</td>
+										<td class="report_text" ng-cloak>{{line_text}}</td>
+									</tr>
+								<tbody>
+							</table>
 					</div>
-					<div class="col-sm-6" id="query_date">
-						<p>２：日付検索<br></p>
-						<label for="date">日付を選択してください。</label><br>
-						<input type="text" id="date" ng-model="date" ng-change="change_date()">
-					</div>
-
-					<p>
-						<!--
-						<button ng-click="ontheclick()">実行</button>
-						-->
-					</p>
-
-				<section id="view" class="col-xs-6">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>ファイル名</th>
-								<th>更新日時</th>
-								<th>テキスト</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="file in fileList">
-								<td>{{file.filename}}</td>
-								<td>{{file.filedate}}</td>
-								<td><a href="{{file.filePath}}"> {{file.filePath}}</a></td>
-							</tr>
-						</tbody>
-					</table>
-				</section>
-
+					</section>
+				</div>
 			</div>
 	</body>
-	<script src="/js/jquery-3.2.1.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-	<script src="/js/angular.min.js"></script>
+	<script src="/assets/javascripts/jquery-1.12.4.js"></script>
+	<script src="/assets/javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.ja.min.js"></script>
+	<script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+	<!--<script src="/assets/javascripts/angular.min.js"></script>-->
 	<script type="text/javascript">
 	var app = angular.module('myApp', []);
 		app.controller('mainCtrl', function($scope, $http) {
 			//レポート名称変更
 			$scope.change_report = function(){
 				//urlを定義
-				var url = "http://localhost:4567/filepath?";
+				var url = "http://localhost:9000/search?";
 				console.log("$scope.report :" + $scope.report);
 
 				//クエリーパラメータ作成
-				var queries = "fileName=" + $scope.report;
+				var queries = "file_name=" + $scope.report;
 
 				// webAPIの呼び出し
 				url = url + queries;
@@ -103,8 +157,22 @@
 				})
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
-					$scope.fileList = data;
-					console.log("data : " + $scope.fileList);
+					if (data.length > 0) {
+						//テーブルヘッダーを表示
+						$scope.view = true;
+
+						$scope.file_list = data;
+						console.log("data : " + $scope.file_list);
+						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
+						$scope.success = true;
+						$scope.info = false;
+						$scope.danger = false;
+					} else {
+						$scope.message = "該当するレコードが見つかりません。";
+						$scope.success = false;
+						$scope.info = true;
+						$scope.danger = false;
+					}
 				})
 				//webAPIの呼び出しに失敗
 				.error(function(data, status, headers, config){
@@ -112,31 +180,24 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
-					console.log("data : " + data);
+					$scope.message = "サーバとの通信に失敗しました。";
+					$scope.success = false;
+					$scope.info = false;
+					$scope.danger = true;
 				});
 			};
+
+
 			//更新日時変更
 			$scope.change_date = function(){
 				//dateをyyyymmddフォーマットへ変換
-				if ($scope.date != null){
-					var base_date = $scope.date;
-					console.log("$scope.date :" + base_date);
-					//yyyyへ変換
-					var yyyy = base_date.slice(0, 4);
-					//mmへ変換
-					var mm = base_date.slice(5, 7);
-					//ddへ変換
-					var dd = base_date.slice(8, 10);
-					//yyyymmddへ変換
-					var yyyymmdd = yyyy + mm + dd;
-					console.log(yyyymmdd);
-				}
+				console.log("$scope.date :" + $scope.date);
 
 				//urlを定義
-				var url = "http://localhost:4567/filepath?";
+				var url = "http://localhost:9000/search?";
 
 				//クエリーパラメータ作成
-				var queries = "fileDate=" + yyyymmdd;
+				var queries = "file_date=" + $scope.date;
 
 				// webAPIの呼び出し
 				url = url + queries;
@@ -148,8 +209,22 @@
 				})
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
-					$scope.fileList = data;
-					console.log("data : " + $scope.fileList);
+					if (data.length > 0) {
+						//テーブルヘッダーを表示
+						$scope.view = true;
+
+						$scope.file_list = data;
+						console.log("data : " + $scope.file_list);
+						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
+						$scope.success = true;
+						$scope.info = false;
+						$scope.danger = false;
+					} else {
+						$scope.message = "該当するレコードが見つかりません。";
+						$scope.success = false;
+						$scope.info = true;
+						$scope.danger = false;
+					}
 				})
 				//webAPIの呼び出しに失敗
 				.error(function(data, status, headers, config){
@@ -157,14 +232,47 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
-					console.log("data : " + data);
+					$scope.message = "サーバとの通信に失敗しました。";
+					$scope.success = false;
+					$scope.info = false;
+					$scope.danger = true;
 				});
 			};
+
+			//アラートメッセージ判定の初期化
+			$scope.alert_init = function(){
+				$scope.success = false;
+				$scope.info = false;
+				$scope.danger = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+			//テーブルヘッダーの表示コントロールの初期化
+			$scope.view_init = function(){
+				$scope.view = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+			//テーブルヘッダーの表示コントロールの初期化
+			$scope.text_line_init = function(){
+				$scope.text_line = false;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
+			//ファイルのテキストを確認
+			$scope.text_check = function(val){
+				$scope.text = val;
+				//angular.element(document.querySelector('#report')).text(val);
+			};
+
 	});
+
 	</script>
 	<script>
-	$(function() {
-	    $('#date').datepicker();
-	});
+		$('.datepicker').datepicker({
+				format: "yyyymmdd",
+				autoclose: true,
+				todayHighlight: true,
+				language:	"ja"
+		});
 	</script>
 </html>

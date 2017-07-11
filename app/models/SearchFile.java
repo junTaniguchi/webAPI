@@ -14,48 +14,52 @@ public class SearchFile {
 
 	private String rootPath;
 
-	private ArrayList<File> hitFileList;
+	private ArrayList<File> hitFileList = new ArrayList<File>();
 
-	private ArrayList<Map> FileMapList;
+	private ArrayList<Map<String, Object>> fileMapList = new ArrayList<Map<String, Object>>();
 
 	public SearchFile(){
 	}
 
 	public SearchFile(String rootPath){
 		this.rootPath = rootPath;
+		//this.fileMapList = null;
+
 	}
 
-	public ArrayList<Map> getFileMapList() {
-		return this.FileMapList;
+	public ArrayList<Map<String, Object>> getFileMapList() {
+		return this.fileMapList;
 	}
 
 	// ファイルを再帰処理で検索
-	public ArrayList<File> recursionSearchFileName(ArrayList<File> hitFileList, String targetFileName) throws IOException{
-		System.out.println("ファイル名検索");
+	public void recursionSearchFileName(String targetFileName) throws IOException{
+		System.out.println("File Name Search");
 		File searchDir = new File(this.rootPath);
 
 		File objlist[] = searchDir.listFiles();
 
 		for (File obj : objlist){
+
+			System.out.println("TARGET FILE NAME : " + targetFileName);
+			System.out.println("SEARCH FILE NAME : " + obj.getName());
+
 			if (obj.isDirectory()){
 				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
 				this.rootPath = obj.getCanonicalPath();
-				hitFileList = recursionSearchFileName(hitFileList, targetFileName);
+				recursionSearchFileName(targetFileName);
 			}else if (obj.isFile()){
-				System.out.println(targetFileName);
-				System.out.println(obj.getName());
 				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
 				if (targetFileName.equals(obj.getName())){
-					hitFileList.add(obj);
+					System.out.println("friends hahaha");
+					this.hitFileList.add(obj);
 				}
 			}
 		}
-		return hitFileList;
 	}
 
 	// ファイルを再帰処理で検索
-	public ArrayList<File> recursionSearchTargetDate(ArrayList<File> hitFileList, String targetDate) throws IOException{
-		System.out.println("更新日付検索");
+	public void recursionSearchTargetDate(String targetDate) throws IOException{
+		System.out.println("File Date Search");
 
 		File searchDir = new File(this.rootPath);
 
@@ -66,21 +70,21 @@ public class SearchFile {
 				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
 				if (obj.getCanonicalPath().indexOf(targetDate) > -1){
 					this.rootPath = obj.getCanonicalPath();
-					hitFileList = recursionSearchTargetDate(hitFileList, targetDate);
+					recursionSearchTargetDate(targetDate);
 				}
 			}else if (obj.isFile()){
 				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
 				if (obj.getCanonicalPath().indexOf(targetDate) > -1){
-					hitFileList.add(obj);
+					this.hitFileList.add(obj);
 				}
 			}
 		}
-		return hitFileList;
 	}
 
 	// ヒットしたファイルをMap化する
-	public void convertFileMapping(ArrayList<File> hitFileList) throws IOException {
-		for (File file : hitFileList) {
+	@SuppressWarnings("null")
+	public void convertFileMapping() throws IOException {
+		for (File file : this.hitFileList) {
 			//リストへ格納するための連想配列を用意
 			Map<String, Object> fileMap = new HashMap<>();
 
@@ -97,12 +101,13 @@ public class SearchFile {
 			filePath = file.getAbsolutePath();
 
 			//ファイルテキストを１行ずつリスト化
-			ArrayList<String> filetext = null;
+			ArrayList<String> filetext = new ArrayList<String>();
+			//filetext = null;
 			BufferedReader br = new BufferedReader(new FileReader(file));
-			String str = br.readLine();
-			while(str != null){
+			String str;
+			while((str = br.readLine()) != null){
+				System.out.println(str);
 				filetext.add(str);
-				str = br.readLine();
 			}
 			br.close();
 
@@ -111,7 +116,7 @@ public class SearchFile {
 			fileMap.put("file_path", filePath);
 			fileMap.put("file_text", filetext);
 
-			this.FileMapList.add(fileMap);
+			this.fileMapList.add(fileMap);
 		}
 	}
 

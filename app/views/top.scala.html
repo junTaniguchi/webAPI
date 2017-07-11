@@ -38,8 +38,12 @@
 			margin-bottom: -10px;
 		}
 		.report_text{
-			font-family: "ＭＳ ゴシック",sans-serif;
-			border: none;
+			/*font-family: "ＭＳ ゴシック",sans-serif;*/
+			border-top: none;
+			border-bottom: none;
+		}
+		.report_text {
+
 		}
 	</style>
 	<body>
@@ -70,21 +74,24 @@
 							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
 							<!--<label for="date">日付を選択してください。</label>-->
 							<div class="input-group">
-								<input type="text" ng-model="date" id="date" class="form-control datepicker">
+								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd" ng-pattern="/[^0-9]*$/" ng-minlength="8" ng-maxlength="8">
 								<span class="input-group-btn">
-									<button class="btn btn-default" ng-click="change_date()">実行</button>
+									<button class="btn btn-primary" ng-click="change_date()">実行</button>
 									<i class='glyphicon glyphicon-search'></i>
-								</button>
-							</span>
+									</button>
+								</span>
+								<span ng-show="myForm.name.$error.minlength">8桁の数値(yyyymmdd)を入力してください</span>
+								<span ng-show="myForm.name.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
+							</div>
 					</section>
 				</div>
 				<div class="row">
 					<section id="result_table">
 						<div class="col-md-6">
 							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
-							<div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div>
-							<div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div>
-							<div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div>
+							<strong><div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div></strong>
+							<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
+							<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
 							<!--<div ng-class="{redColor:isRed}" role="alert" ng-bind="message"></div>-->
 							<table class="table table-hover" ng-init="view_init()" ng-show="view">
 								<thead>
@@ -99,7 +106,7 @@
 										<td ng-cloak>{{file.file_name}}</td>
 										<td ng-cloak>{{file.file_date}}</td>
 										<!--<td>{{file.file_path}}</td>-->
-										<td><button class="btn btn-primary" ng-click="text_check(file.file_date)">確認</button></td>
+										<td><button class="btn btn-primary" ng-click="text_check(file.file_text)">確認</button></td>
 									</tr>
 								</tbody>
 							</table>
@@ -155,9 +162,9 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
-						//テーブルヘッダーを表示
-						$scope.view = true;
-
+						
+						$scope.text_line = false; //ファイルのテキストを非表示へ
+						$scope.view = true; //ファイルの一覧表を表示
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
@@ -165,6 +172,8 @@
 						$scope.info = false;
 						$scope.danger = false;
 					} else {
+						$scope.text_line = false;　//ファイルのテキストを非表示へ
+						$scope.view = false; //ファイルの一覧表を非表示へ
 						$scope.message = "該当するレコードが見つかりません。";
 						$scope.success = false;
 						$scope.info = true;
@@ -177,6 +186,8 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
+					$scope.text_line = false;　//ファイルのテキストを非表示へ
+					$scope.view = false; //ファイルの一覧表を非表示へ
 					$scope.message = "サーバとの通信に失敗しました。";
 					$scope.success = false;
 					$scope.info = false;
@@ -189,25 +200,12 @@
 			$scope.change_date = function(){
 				//dateをyyyymmddフォーマットへ変換
 				console.log("$scope.date :" + $scope.date);
-				if ($scope.date != null){
-					var base_date = $scope.date;
-					console.log("$scope.date :" + base_date);
-					//yyyyへ変換
-					var yyyy = base_date.slice(0, 4);
-					//mmへ変換
-					var mm = base_date.slice(5, 7);
-					//ddへ変換
-					var dd = base_date.slice(8, 10);
-					//yyyymmddへ変換
-					var yyyymmdd = yyyy + mm + dd;
-					console.log(yyyymmdd);
-				}
 
 				//urlを定義
 				var url = "http://localhost:9000/search?";
 
 				//クエリーパラメータ作成
-				var queries = "file_date=" + yyyymmdd;
+				var queries = "file_date=" + $scope.date;
 
 				// webAPIの呼び出し
 				url = url + queries;
@@ -220,9 +218,9 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
-						//テーブルヘッダーを表示
-						$scope.view = true;
-
+						
+						$scope.text_line = false;　//ファイルのテキストを非表示へ
+						$scope.view = true; //ファイルの一覧表を表示
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
@@ -230,6 +228,8 @@
 						$scope.info = false;
 						$scope.danger = false;
 					} else {
+						$scope.text_line = false;　//ファイルのテキストを非表示へ
+						$scope.view = false; //ファイルの一覧表を非表示へ
 						$scope.message = "該当するレコードが見つかりません。";
 						$scope.success = false;
 						$scope.info = true;
@@ -242,6 +242,8 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
+					$scope.text_line = false;　//ファイルのテキストを非表示へ
+					$scope.view = false; //ファイルの一覧表を非表示へ
 					$scope.message = "サーバとの通信に失敗しました。";
 					$scope.success = false;
 					$scope.info = false;
@@ -254,24 +256,21 @@
 				$scope.success = false;
 				$scope.info = false;
 				$scope.danger = false;
-				//angular.element(document.querySelector('#report')).text(val);
 			};
 			//テーブルヘッダーの表示コントロールの初期化
 			$scope.view_init = function(){
 				$scope.view = false;
-				//angular.element(document.querySelector('#report')).text(val);
 			};
 
 			//テーブルヘッダーの表示コントロールの初期化
 			$scope.text_line_init = function(){
 				$scope.text_line = false;
-				//angular.element(document.querySelector('#report')).text(val);
 			};
 
 			//ファイルのテキストを確認
-			$scope.text_check = function(val){
-				$scope.text = val;
-				//angular.element(document.querySelector('#report')).text(val);
+			$scope.text_check = function(file_text){
+				$scope.text_line = true;
+				$scope.text = file_text;
 			};
 
 	});
