@@ -50,7 +50,6 @@ public class SearchFile {
 			}else if (obj.isFile()){
 				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
 				if (targetFileName.equals(obj.getName())){
-					System.out.println("friends hahaha");
 					this.hitFileList.add(obj);
 				}
 			}

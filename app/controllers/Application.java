@@ -40,14 +40,16 @@ public class Application extends Controller {
     	//Map<String, String[]> queryStrings = request().body().asFormUrlEncoded();
 
     	if (queryStrings.containsKey("file_name")) {
+			System.out.println("file_name Search");
     		try {
 	        	searchFile.recursionSearchFileName(queryStrings.get("file_name")[0]);
     		} catch (IOException e) {
 	        	e.printStackTrace();
     		}
     	} else if (queryStrings.containsKey("file_date")) {
+			System.out.println("file_date Search");
     		try {
-	        	searchFile.recursionSearchFileName(queryStrings.get("file_date")[0]);
+	        	searchFile.recursionSearchTargetDate(queryStrings.get("file_date")[0]);
     		} catch (IOException e) {
 	        	e.printStackTrace();
     		}

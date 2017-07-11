@@ -14,8 +14,6 @@
 			margin-left: 15px;
 			margin-top: 20px;
 		}
-		body{
-		}
 		h1{
 			border-bottom: 3px solid black;
 			padding-bottom: 3px;
@@ -37,13 +35,58 @@
 		#search{
 			margin-bottom: -10px;
 		}
-		.report_text{
+		.report_text td {
 			/*font-family: "ＭＳ ゴシック",sans-serif;*/
 			border-top: none;
 			border-bottom: none;
 		}
-		.report_text {
-
+		.ng-enter,
+		.ng-leave,
+		.ng-move {
+		-webkit-transition: opacity 0.15s linear;
+		transition: opacity 0.15s linear;
+		}
+		.ng-enter {
+		opacity: 0;
+		}
+		.ng-enter.ng-enter-active {
+		opacity: 1;
+		}
+		.ng-leave {
+		opacity: 1;
+		}
+		.ng-leave.ng-leave-active {
+		opacity: 0;
+		}
+		.ng-move {
+		opacity: .5;
+		}
+		.ng-move.ng-move-active {
+		opacity: 1;
+		}
+		.animated.ng-enter,
+		.animated.ng-leave,
+		.animated.ng-move {
+		-webkit-transition: opacity 0.15s linear;
+		transition: opacity 0.15s linear;
+		}
+		.animated.ng-enter {
+		opacity: 0;
+		}
+		.animated.ng-enter.ng-enter-active {
+		opacity: 1;
+		}
+		.animated.ng-leave {
+		opacity: 1;
+		}
+		.animated.ng-leave.ng-leave-active {
+		opacity: 0;
+		}
+		.animated.ng-move {
+		opacity: .5;
+		}
+		.animated.ng-move.ng-move-active {
+		opacity: 1;
 		}
 	</style>
 	<body>
@@ -51,10 +94,9 @@
 			<p>下記いずれかの方法で検索してください。</p>
 			<div ng-controller="mainCtrl">
 				<div class="row" id="search">
-					<section id="query">
-						<div class="col-md-4" id="query_name">
+					<section>
+						<div class="col-md-4">
 							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください。</small></h4>
-							<!--<label for="report">閲覧するレポートを選択してください。</label><br>-->
 							<div class="input-group">
 								<select ng-model="report" id="report" class="form-control">
 									<option value="">ファイル選択なし</option>
@@ -64,35 +106,31 @@
 									<option value="EP103">EP103</option>
 								</select>
 								<span class="input-group-btn">
-									<button class="btn btn-primary" ng-click="change_report()">実行</button>
+									<button class="btn btn-primary" ng-click="select_report()">検索
 									<i class='glyphicon glyphicon-search'></i>
 									</button>
 								</span>
 							</div>
-						</div>
-						<div class="col-xs-offset-2 col-md-4" id="query_date">
 							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
-							<!--<label for="date">日付を選択してください。</label>-->
 							<div class="input-group">
-								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd" ng-pattern="/[^0-9]*$/" ng-minlength="8" ng-maxlength="8">
+								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd" ng-minlength="8" ng-maxlength="8">
 								<span class="input-group-btn">
-									<button class="btn btn-primary" ng-click="change_date()">実行</button>
+									<button class="btn btn-primary" ng-click="select_date()">検索
 									<i class='glyphicon glyphicon-search'></i>
 									</button>
 								</span>
-								<span ng-show="myForm.name.$error.minlength">8桁の数値(yyyymmdd)を入力してください</span>
-								<span ng-show="myForm.name.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
+								<span ng-show="date.$error.minlength">8桁の数値(yyyymmdd)を入力してください</span>
+								<span ng-show="date.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
 							</div>
-					</section>
-				</div>
-				<div class="row">
-					<section id="result_table">
-						<div class="col-md-6">
-							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
+							<br>
+							<button class="btn btn-primary" ng-click="both_select()">両方の条件で検索
+							<i class='glyphicon glyphicon-search'></i>
+							</button>
+							<br>
 							<strong><div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div></strong>
 							<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
 							<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
-							<!--<div ng-class="{redColor:isRed}" role="alert" ng-bind="message"></div>-->
+							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
 							<table class="table table-hover" ng-init="view_init()" ng-show="view">
 								<thead>
 									<tr>
@@ -102,48 +140,57 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="file in file_list">
+									<tr ng-repeat="file in file_list" class="animated">
 										<td ng-cloak>{{file.file_name}}</td>
 										<td ng-cloak>{{file.file_date}}</td>
-										<!--<td>{{file.file_path}}</td>-->
-										<td><button class="btn btn-primary" ng-click="text_check(file.file_text)">確認</button></td>
+										<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
+											</button>
+										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
-
-						<div class="col-md-6">
-							<h4 ng-init="text_line_init()" ng-show="text_line">レポート詳細</h4>
-							<table class="report_text">
-								<thead class="report_text">
-									<tr>
-										<th ng-init="text_line_init()" ng-show="text_line">行数</th>
-										<th ng-init="text_line_init()" ng-show="text_line">テキスト</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="line_text in text">
-										<td class="report_text" ng-cloak>{{$index+1}}</td>
-										<td class="report_text" ng-cloak>{{line_text}}</td>
-									</tr>
-								<tbody>
-							</table>
-					</div>
+						<div class="col-md-7 panel panel-default" ng-show="text_line">
+							<h4 ng-init="text_line_init()">  レポート詳細</h4>
+							<div ng-init="text_line_init()" class="panel-heading" role="alert">
+								<p ng-init="text_line_init()">レポート名：<strong>{{file_name}}</strong></p>
+								<p ng-init="text_line_init()">作成日時　：<strong>{{file_date}}</strong></p>
+							</div>
+							<div class="panel-body">
+								<table class="report_text">
+									<tbody>
+										<tr ng-repeat="text in file_text" class="animated">
+											<td ng-cloak>{{$index+1}}</td>
+											<td ng-cloak>{{text}}</td>
+										</tr>
+									<tbody>
+								</table>
+							</div>
+						</div>
 					</section>
 				</div>
 			</div>
 	</body>
-	<script src="/assets/javascripts/jquery-1.12.4.js"></script>
-	<script src="/assets/javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.min.js"></script>
-		<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.ja.min.js"></script>
-	<script src="http://code.angularjs.org/angular-1.0.1.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/bootstrap-datepicker.ja.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/angular.min.js"></script>
+	<script type="text/javascript" src="/assets/javascripts/angular-animate.min.js"></script>
 	<!--<script src="/assets/javascripts/angular.min.js"></script>-->
 	<script type="text/javascript">
-	var app = angular.module('myApp', []);
+	var app = angular.module('myApp', ['ngAnimate']);
 		app.controller('mainCtrl', function($scope, $http) {
 			//レポート名称変更
-			$scope.change_report = function(){
+			$scope.select_report = function(){
+
+				//初期化
+				$scope.text_line = false;　//ファイルのテキストを非表示へ
+				$scope.view = false;       //ファイルの一覧表を表示
+				$scope.success = false;
+				$scope.info = false;
+				$scope.danger = false;
+
 				//urlを定義
 				var url = "http://localhost:9000/search?";
 				console.log("$scope.report :" + $scope.report);
@@ -163,21 +210,14 @@
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
 						
-						$scope.text_line = false; //ファイルのテキストを非表示へ
 						$scope.view = true; //ファイルの一覧表を表示
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
 						$scope.success = true;
-						$scope.info = false;
-						$scope.danger = false;
 					} else {
-						$scope.text_line = false;　//ファイルのテキストを非表示へ
-						$scope.view = false; //ファイルの一覧表を非表示へ
 						$scope.message = "該当するレコードが見つかりません。";
-						$scope.success = false;
 						$scope.info = true;
-						$scope.danger = false;
 					}
 				})
 				//webAPIの呼び出しに失敗
@@ -186,18 +226,22 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
-					$scope.text_line = false;　//ファイルのテキストを非表示へ
-					$scope.view = false; //ファイルの一覧表を非表示へ
 					$scope.message = "サーバとの通信に失敗しました。";
-					$scope.success = false;
-					$scope.info = false;
 					$scope.danger = true;
 				});
 			};
 
 
 			//更新日時変更
-			$scope.change_date = function(){
+			$scope.select_date = function(){
+
+				//初期化
+				$scope.text_line = false;　//ファイルのテキストを非表示へ
+				$scope.view = false;       //ファイルの一覧表を表示
+				$scope.success = false;
+				$scope.info = false;
+				$scope.danger = false;
+
 				//dateをyyyymmddフォーマットへ変換
 				console.log("$scope.date :" + $scope.date);
 
@@ -218,22 +262,14 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
-						
-						$scope.text_line = false;　//ファイルのテキストを非表示へ
-						$scope.view = true; //ファイルの一覧表を表示
-						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
 						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
+						$scope.file_list = data;
+						$scope.view = true; //ファイルの一覧表を表示
 						$scope.success = true;
-						$scope.info = false;
-						$scope.danger = false;
 					} else {
-						$scope.text_line = false;　//ファイルのテキストを非表示へ
-						$scope.view = false; //ファイルの一覧表を非表示へ
 						$scope.message = "該当するレコードが見つかりません。";
-						$scope.success = false;
 						$scope.info = true;
-						$scope.danger = false;
 					}
 				})
 				//webAPIの呼び出しに失敗
@@ -242,11 +278,59 @@
 					console.log("headers : " + headers);
 					console.log("status : " + status);
 					console.log("config : " + config);
-					$scope.text_line = false;　//ファイルのテキストを非表示へ
-					$scope.view = false; //ファイルの一覧表を非表示へ
 					$scope.message = "サーバとの通信に失敗しました。";
-					$scope.success = false;
-					$scope.info = false;
+					$scope.danger = true;
+				});
+			};
+
+			//レポート名＆更新日時変更
+			$scope.both_select = function(){
+
+				//初期化
+				$scope.text_line = false;　//ファイルのテキストを非表示へ
+				$scope.view = false;       //ファイルの一覧表を表示
+				$scope.success = false;
+				$scope.info = false;
+				$scope.danger = false;
+
+				//dateをyyyymmddフォーマットへ変換
+				console.log("report :" + $scope.report);
+				console.log("date :" + $scope.date);
+
+				//urlを定義
+				var url = "http://localhost:9000/search?";
+
+				//クエリーパラメータ作成
+				var queries = "file_name=" + $scope.report + "&file_date=" + $scope.date;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					if (data.length > 0) {
+						console.log("data : " + $scope.file_list);
+						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
+						$scope.file_list = data;
+						$scope.view = true; //ファイルの一覧表を表示
+						$scope.success = true;
+					} else {
+						$scope.message = "該当するレコードが見つかりません。";
+						$scope.info = true;
+					}
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+					console.log("headers : " + headers);
+					console.log("status : " + status);
+					console.log("config : " + config);
+					$scope.message = "サーバとの通信に失敗しました。";
 					$scope.danger = true;
 				});
 			};
@@ -257,6 +341,7 @@
 				$scope.info = false;
 				$scope.danger = false;
 			};
+
 			//テーブルヘッダーの表示コントロールの初期化
 			$scope.view_init = function(){
 				$scope.view = false;
@@ -268,11 +353,12 @@
 			};
 
 			//ファイルのテキストを確認
-			$scope.text_check = function(file_text){
+			$scope.text_check = function(file){
 				$scope.text_line = true;
-				$scope.text = file_text;
+				$scope.file_name = file.file_name;
+				$scope.file_text = file.file_text;
+				$scope.file_date = file.file_date;
 			};
-
 	});
 
 	</script>
