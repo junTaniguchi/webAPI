@@ -23,8 +23,6 @@ public class SearchFile {
 
 	public SearchFile(String rootPath){
 		this.rootPath = rootPath;
-		//this.fileMapList = null;
-
 	}
 
 	public ArrayList<Map<String, Object>> getFileMapList() {
@@ -39,10 +37,6 @@ public class SearchFile {
 		File objlist[] = searchDir.listFiles();
 
 		for (File obj : objlist){
-
-			System.out.println("TARGET FILE NAME : " + targetFileName);
-			System.out.println("SEARCH FILE NAME : " + obj.getName());
-
 			if (obj.isDirectory()){
 				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
 				this.rootPath = obj.getCanonicalPath();
@@ -67,17 +61,24 @@ public class SearchFile {
 		for (File obj : objlist){
 			if (obj.isDirectory()){
 				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
-				if (obj.getCanonicalPath().indexOf(targetDate) > -1){
-					this.rootPath = obj.getCanonicalPath();
-					recursionSearchTargetDate(targetDate);
-				}
+				this.rootPath = obj.getCanonicalPath();
+				recursionSearchTargetDate(targetDate);
+
 			}else if (obj.isFile()){
 				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
-				if (obj.getCanonicalPath().indexOf(targetDate) > -1){
+				if (targetDate.equals(timeToString(obj, "yyyyMMdd"))){
 					this.hitFileList.add(obj);
 				}
 			}
 		}
+	}
+	public String timeToString(File file, String dateFormat){
+		//ファイルの更新日時
+		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+
+		Long lastModified = file.lastModified();
+		String fileDate = sdf.format(lastModified);
+		return fileDate;
 	}
 
 	// ヒットしたファイルをMap化する
@@ -91,9 +92,7 @@ public class SearchFile {
 			String filename = file.getName();
 
 			//ファイルの更新日時
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Long lastModified = file.lastModified();
-			String filedate = sdf.format(lastModified);
+			String filedate = timeToString(file, "yyyy年MM月dd日 HH:mm.ss");
 
 			//ファイルの格納されている絶対パスを取得
 			String filePath;
@@ -105,7 +104,6 @@ public class SearchFile {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str;
 			while((str = br.readLine()) != null){
-				System.out.println(str);
 				filetext.add(str);
 			}
 			br.close();

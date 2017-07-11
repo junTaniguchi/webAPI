@@ -13,11 +13,12 @@
 			font-family: arial, sans-serif;
 			margin-left: 15px;
 			margin-top: 20px;
+			height: 100%;
+			width: 100%;
 		}
 		h1{
 			border-bottom: 3px solid black;
 			padding-bottom: 3px;
-			margin-right: 25%;
 			margin-bottom: 35px;
 		}
 		input{
@@ -88,6 +89,22 @@
 		.animated.ng-move.ng-move-active {
 		opacity: 1;
 		}
+		.height_limit{
+			height: 350px;
+			overflow:auto;
+		}
+		.col-md-7{
+			margin-left: 10px;
+			height: 700px;
+			overflow:auto;
+			box-shadow:0px 0px 10px;
+		}
+		.right{
+			width: 100%;
+			margin-left: auto;
+			margin-right: auto;
+			margin-bottom: 10px;
+		}
 	</style>
 	<body>
 		<h1>Edit Package Report Search</h1>
@@ -123,7 +140,7 @@
 								<span ng-show="date.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
 							</div>
 							<br>
-							<button class="btn btn-primary" ng-click="both_select()">両方の条件で検索
+							<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
 							<i class='glyphicon glyphicon-search'></i>
 							</button>
 							<br>
@@ -131,36 +148,38 @@
 							<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
 							<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
 							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
-							<table class="table table-hover" ng-init="view_init()" ng-show="view">
-								<thead>
-									<tr>
-										<th>ファイル名</th>
-										<th>更新日時</th>
-										<th>テキスト</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr ng-repeat="file in file_list" class="animated">
-										<td ng-cloak>{{file.file_name}}</td>
-										<td ng-cloak>{{file.file_date}}</td>
-										<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
-											</button>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="height_limit">
+								<table class="table table-hover" ng-init="view_init()" ng-show="view">
+									<thead>
+										<tr>
+											<th>ファイル名</th>
+											<th>更新日時</th>
+											<th>テキスト</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="file in file_list" class="animated">
+											<td ng-cloak>{{file.file_name}}</td>
+											<td ng-cloak>{{file.file_date}}</td>
+											<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 						<div class="col-md-7 panel panel-default" ng-show="text_line">
 							<h4 ng-init="text_line_init()">  レポート詳細</h4>
-							<div ng-init="text_line_init()" class="panel-heading" role="alert">
-								<p ng-init="text_line_init()">レポート名：<strong>{{file_name}}</strong></p>
-								<p ng-init="text_line_init()">作成日時　：<strong>{{file_date}}</strong></p>
+							<div ng-init="text_line_init()" class="panel-heading">
+								<p>レポート名：<strong>{{file_name}}</strong></p>
+								<p>作成日時　：<strong>{{file_date}}</strong></p>
 							</div>
-							<div class="panel-body">
+							<div class="panel-body" ng-init="text_line_init()">
 								<table class="report_text">
 									<tbody>
-										<tr ng-repeat="text in file_text" class="animated">
-											<td ng-cloak>{{$index+1}}</td>
+										<tr ng-repeat="text in text_lines track by $index" class="animated">
+											<!--<td ng-cloak>{{$index+1}}</td>-->
 											<td ng-cloak>{{text}}</td>
 										</tr>
 									<tbody>
@@ -209,7 +228,7 @@
 				//webAPIの呼び出しに成功
 				.success(function(data, status, headers, config) {
 					if (data.length > 0) {
-						
+
 						$scope.view = true; //ファイルの一覧表を表示
 						$scope.file_list = data;
 						console.log("data : " + $scope.file_list);
@@ -356,8 +375,9 @@
 			$scope.text_check = function(file){
 				$scope.text_line = true;
 				$scope.file_name = file.file_name;
-				$scope.file_text = file.file_text;
+				$scope.text_lines = file.file_text;
 				$scope.file_date = file.file_date;
+				console.log($scope.text_lines);
 			};
 	});
 
