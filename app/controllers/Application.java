@@ -29,7 +29,7 @@ public class Application extends Controller {
     	 *              file_date=
     	 * */
 
-    	SearchFile searchFile = new SearchFile("C:\\\\Users\\\\JunTaniguchi\\\\Desktop\\\\EP");
+    	SearchFile searchFile = new SearchFile("C:\\\\Users\\\\j13-taniguchi\\\\Desktop\\\\EP");
 
     	//GETメソッドのパラメータを取得。
     	Map<String, String[]> queryStrings = request().queryString();

@@ -95,7 +95,7 @@
 		}
 		.col-md-7{
 			margin-left: 10px;
-			height: 700px;
+			height: 500px;
 			overflow:auto;
 			box-shadow:0px 0px 10px;
 		}
@@ -117,10 +117,10 @@
 							<div class="input-group">
 								<select ng-model="report" id="report" class="form-control">
 									<option value="">ファイル選択なし</option>
-									<option value="EP100">EP100</option>
-									<option value="EP101">EP101</option>
-									<option value="EP102">EP102</option>
-									<option value="EP103">EP103</option>
+									<option value="EP100.txt">EP100</option>
+									<option value="EP101.txt">EP101</option>
+									<option value="EP102.txt">EP102</option>
+									<option value="EP103.txt">EP103</option>
 								</select>
 								<span class="input-group-btn">
 									<button class="btn btn-primary" ng-click="select_report()">検索
@@ -130,14 +130,13 @@
 							</div>
 							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
 							<div class="input-group">
-								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd" ng-minlength="8" ng-maxlength="8">
+								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
 								<span class="input-group-btn">
 									<button class="btn btn-primary" ng-click="select_date()">検索
 									<i class='glyphicon glyphicon-search'></i>
 									</button>
 								</span>
-								<span ng-show="date.$error.minlength">8桁の数値(yyyymmdd)を入力してください</span>
-								<span ng-show="date.$error.maxlength">8桁の数値(yyyymmdd)を入力してください</span>
+								<span ng-show="date.minlength">8桁の数値(yyyymmdd)を入力してください</span>
 							</div>
 							<br>
 							<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
@@ -148,7 +147,7 @@
 							<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
 							<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
 							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
-							<div class="height_limit">
+							<div class="height_limit" when-scrolled='loadMore()'>
 								<table class="table table-hover" ng-init="view_init()" ng-show="view">
 									<thead>
 										<tr>
@@ -169,7 +168,7 @@
 								</table>
 							</div>
 						</div>
-						<div class="col-md-7 panel panel-default" ng-show="text_line">
+						<div class="col-md-7 panel panel-default" ng-show="text_line" when-scrolled='loadMore()'>
 							<h4 ng-init="text_line_init()">  レポート詳細</h4>
 							<div ng-init="text_line_init()" class="panel-heading">
 								<p>レポート名：<strong>{{file_name}}</strong></p>
@@ -379,7 +378,43 @@
 				$scope.file_date = file.file_date;
 				console.log($scope.text_lines);
 			};
-	});
+		});
+		//無限スクロールのコントローラ
+		app.controller('InfiniteScrollCtrl', ['$scope', function($scope){
+			var i = 0;
+			var data = [];
+			for(i = 0; i < 25; i++) {
+				data.push(i);
+			}
+			$scope.data = data;
+			$scope.next = data.length;
+			$scope.loadMore = function() {
+				if ($scope.next === i + 25) {
+					return;
+				}
+				$scope.next = i + 25;
+
+				for(; i < $scope.next; i++) {
+					data.push(i);
+				}
+			};
+		}]);
+		//無限スクロールのディレクティブ
+		app.directive('whenScrolled', function($window) {
+			return function(scope,  elem,  attr) {
+				var raw = elem[0];
+				angular.element($window).bind('scroll',  function(){
+					if (raw.offsetTop + raw.offsetHeight < document.documentElement.scrollTop + window.innerHeight){
+						scope.$apply(attr.whenScrolled);
+					}
+				});
+			};
+		});
+		app.directive('appVersion', ['version', function(version) {
+			return function(scope, elm, attrs) {
+				elm.text(version);
+			};
+		}]);
 
 	</script>
 	<script>
