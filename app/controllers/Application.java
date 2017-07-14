@@ -35,7 +35,7 @@ public class Application extends Controller {
     	 *              file_date=
     	 * */
 
-    	SearchFile searchFile = new SearchFile("C:\\\\Users\\\\j13-taniguchi\\\\Desktop\\\\EP");
+    	SearchFile searchFile = new SearchFile("C:\\\\Users\\\\JunTaniguchi\\\\Desktop\\\\EP");
 
     	//GETメソッドのパラメータを取得。
     	Map<String, String[]> queryStrings = request().queryString();
@@ -72,10 +72,6 @@ public class Application extends Controller {
       System.out.println(searchFile.getFileMapList());
 
       return ok(Json.toJson(searchFile.getFileMapList()));
-    }
-
-    public static Result top() {
-    	return ok(top.render());
     }
 
 }
