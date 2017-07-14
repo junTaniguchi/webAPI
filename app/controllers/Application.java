@@ -1,6 +1,11 @@
 package controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 
 import models.SearchFile;
@@ -9,6 +14,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 import views.html.top;
+
 
 public class Application extends Controller {
 
@@ -67,4 +73,9 @@ public class Application extends Controller {
 
       return ok(Json.toJson(searchFile.getFileMapList()));
     }
+
+    public static Result top() {
+    	return ok(top.render());
+    }
+
 }

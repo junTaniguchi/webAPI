@@ -32,10 +32,12 @@ public class SearchFile {
 	// ファイルを再帰処理で検索
 	public void recursionSearchFileName(String targetFileName) throws IOException{
 		System.out.println("File Name Search");
+		System.out.println("targetFileName : " + targetFileName);
 		File searchDir = new File(this.rootPath);
 
 		File objlist[] = searchDir.listFiles();
-
+		System.out.println("this.rootPath : " + this.rootPath);
+		System.out.println("objlist[] : " + objlist);
 		for (File obj : objlist){
 			if (obj.isDirectory()){
 				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
