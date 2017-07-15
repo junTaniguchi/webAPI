@@ -43,7 +43,7 @@
 									</button>
 								</span>
 							</div>
-							<h4>２：レポート作成日付検索<small>　日付を選択してください</small></h4>
+							<h4>２：レポート作成日付検索<small>　8桁の日付(yyyymmdd)を選択してください</small></h4>
 							<div class="input-group">
 								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
 								<span class="input-group-btn">
@@ -51,7 +51,6 @@
 									<i class='glyphicon glyphicon-search'></i>
 									</button>
 								</span>
-								<span ng-show="date.minlength">8桁の数値(yyyymmdd)を入力してください</span>
 							</div>
 							<br>
 							<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
