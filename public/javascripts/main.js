@@ -1,3 +1,12 @@
+// 文字列から，Unicodeコードポイントの配列を作る
+function str_to_unicode_array( str ){
+  var arr = [];
+  for( var i = 0; i < str.length; i ++ ){
+    arr.push( str.charCodeAt( i ) );
+  }
+  return arr;
+};
+
 var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
   app.controller('modalCtrl', [ '$scope', '$uibModal', function(){
     //モーダルダイアログ生成
