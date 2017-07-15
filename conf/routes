@@ -13,3 +13,6 @@ GET     /top                        controllers.Application.top()
 
 #webAPI
 GET     /search                     controllers.Application.getSearch()
+
+#webAPI
+GET    /download                    controllers.Application.getDownload()

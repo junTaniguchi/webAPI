@@ -193,9 +193,9 @@
 								</div>
 								<br>
 								<div class="col-md-offset-6 col-md-2">
-									<button id="download" class="btn btn-info btn-lg" ng-init="text_line_init()" ng-show="text_line" ng-click="download(file_path)">ダウンロード
-									<i class='glyphicon glyphicon-search'></i>
-									</button>
+									<a id="download" class="btn btn-info btn-lg" ng-init="text_line_init()" ng-click="download()" ng-show="text_line">ダウンロード
+									<i class='glyphicon glyphicon-download-alt'></i>
+									</a>
 								</div>
 							</div>
 							<div class="panel-body" ng-init="text_line_init()">
@@ -407,10 +407,47 @@
 				$scope.text_lines = file.file_text;
 				console.log("$scope.text_lines" + $scope.text_lines);
 			};
-			$scope.download = function(file_path){
-				window.navigator.msSaveOrOpenBlob(blob, file_path);
-				window.URL.createObjectURL(blob);
-			}
+
+			//ファイルのダウンロード
+			$scope.download = function(file_name, file_path){
+				//urlを定義
+				var url = "http://localhost:9000/download?";
+				//クエリーパラメータ作成
+				var queries = "file_name=" + $scope.file_name + "&file_path=" + $scope.file_path;
+
+				// webAPIの呼び出し
+				url = url + queries;
+				console.log("url :" + url);
+				$http({
+					url: url,
+					dataType: 'jsonp',
+					method: 'GET'
+				})
+				//webAPIの呼び出しに成功
+				.success(function(data, status, headers, config) {
+					console.log("成功");
+
+					//console.log("data   :" + data);
+					// Unicodeコードポイントの配列に変換する
+					var unicode_array = str_to_unicode_array(data);
+					// SJISコードポイントの配列に変換
+					//var sjis_code_array = Encoding.convert( unicode_array, 'SJIS', 'UNICODE');
+					// 文字コード配列をTypedArrayに変換する
+					//var uint8_array = new Uint8Array(sjis_code_array);
+					var uint8_array = new Uint8Array(unicode_array);
+					// 指定されたデータを保持するBlobを作成する
+					var blob = new Blob([uint8_array], {type:'text/plain'});
+					console.log("blob :" + blob);
+					// Aタグのhref属性にBlobオブジェクトを設定し、リンクを生成
+					window.URL = window.URL || window.webkitURL.createObjectURL(blob);
+					document.getElementById("download").href = window.URL.createObjectURL(blob);
+					document.getElementById("download").download = $scope.file_name;
+				})
+				//webAPIの呼び出しに失敗
+				.error(function(data, status, headers, config){
+					console.log("失敗");
+				});
+			};
 		});
 		//無限スクロールのコントローラ
 		app.controller('InfiniteScrollCtrl', ['$scope', function($scope){
@@ -457,5 +494,15 @@
 				todayHighlight: true,
 				language:	"ja"
 		});
+	</script>
+	<script>
+		// 文字列から，Unicodeコードポイントの配列を作る
+		function str_to_unicode_array( str ){
+			var arr = [];
+			for( var i = 0; i < str.length; i ++ ){
+				arr.push( str.charCodeAt( i ) );
+			}
+			return arr;
+		};
 	</script>
 </html>

@@ -1,11 +1,7 @@
 package controllers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Map;
 
 import models.SearchFile;
@@ -14,6 +10,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 import views.html.top;
+
 
 
 public class Application extends Controller {
@@ -72,6 +69,26 @@ public class Application extends Controller {
       System.out.println(searchFile.getFileMapList());
 
       return ok(Json.toJson(searchFile.getFileMapList()));
+    }
+
+    public static Result getDownload() {
+      //GETメソッドのパラメータを取得。
+    	Map<String, String[]> queryStrings = request().queryString();
+      System.out.println("queryStrings :" + queryStrings);
+      //クエリパラメータよりダウンロード対象ファイルの名称を取得
+      String fileName = queryStrings.get("file_name")[0];
+      //クエリパラメータよりダウンロード対象ファイルのパスを取得
+      String filePath = queryStrings.get("file_path")[0];
+      //目的のファイルをインスタンス化
+      File downloadFile = new File(filePath);
+      //コンテンツタイプをocted-streamへ変更
+      response().setContentType("application/octet-stream");
+      response().setHeader("Content-Disposition", "attachment; filename*=UTF-8'ja'" + fileName);
+      response().setHeader("Content-Length", "" + downloadFile.length());
+
+      //ファイルを転送
+      return ok(downloadFile).as("text/plain");
+
     }
 
 }
