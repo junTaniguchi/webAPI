@@ -29,7 +29,7 @@ public class SearchFile {
 		return this.fileMapList;
 	}
 
-	// ファイルを再帰処理で検索
+	// ファイルをファイル名で検索
 	public void recursionSearchFileName(String targetFileName) throws IOException{
 		System.out.println("File Name Search");
 		System.out.println("targetFileName : " + targetFileName);
@@ -52,7 +52,7 @@ public class SearchFile {
 		}
 	}
 
-	// ファイルを再帰処理で検索
+	// ファイルを更新日時で検索
 	public void recursionSearchTargetDate(String targetDate) throws IOException{
 		System.out.println("File Date Search");
 
@@ -69,6 +69,28 @@ public class SearchFile {
 			}else if (obj.isFile()){
 				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
 				if (targetDate.equals(timeToString(obj, "yyyyMMdd"))){
+					this.hitFileList.add(obj);
+				}
+			}
+		}
+	}
+	// ファイルをファイル名と更新日時で検索
+	public void recursionSearchDual(String targetFileName, String targetDate) throws IOException{
+		System.out.println("Dual Search");
+
+		File searchDir = new File(this.rootPath);
+
+		File objlist[] = searchDir.listFiles();
+
+		for (File obj : objlist){
+			if (obj.isDirectory()){
+				//取得したオブジェクトがディレクトリの場合、再帰処理を行う
+				this.rootPath = obj.getCanonicalPath();
+				recursionSearchTargetDate(targetDate);
+
+			}else if (obj.isFile()){
+				//取得したオブジェクトがファイルの場合、ファイル名が一致するかを確認する。
+				if (targetFileName.equals(obj.getName()) && targetDate.equals(timeToString(obj, "yyyyMMdd"))){
 					this.hitFileList.add(obj);
 				}
 			}

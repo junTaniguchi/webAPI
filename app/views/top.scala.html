@@ -6,14 +6,17 @@
 		<meta http-equiv="cache-control" content="no-cache" />
 		<meta http-equiv="expires" content="0" />
 		<title>Edit Package Report Search</title>
-		<link rel="stylesheet" href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+		<link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet" />
 		<style>
 			html{
-				font-family: arial, sans-serif;
 				margin-left: 15px;
 				margin-top: 20px;
 				height: 100%;
 				width: 100%;
+			}
+			body{
+				font-family: "Lucida Grande", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+				text-align: justify;
 			}
 			h1{
 				border-bottom: 3px solid black;
@@ -89,11 +92,11 @@
 			opacity: 1;
 			}
 			.height_limit{
-				height: 350px;
+				height: 310px;
 				overflow:auto;
 			}
 			.panel-body{
-				height: 600px;
+				height: 550px;
 				overflow:auto;
 			}.panel{
 				margin-left: 10px;
@@ -123,13 +126,13 @@
 			<div ng-controller="mainCtrl">
 				<div class="row">
 					<div class="col-md-4">
-						<p>下記いずれかの方法で検索してください。</p>
+						<p>下記いずれかの方法で検索してください</p>
 					</div>
 				</div>
 				<div class="row" id="search">
 					<section>
 						<div class="col-md-4">
-							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください。</small></h4>
+							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください</small></h4>
 							<div class="input-group">
 								<select ng-model="report" id="report" class="form-control">
 									<option value="">ファイル選択なし</option>
@@ -144,7 +147,7 @@
 									</button>
 								</span>
 							</div>
-							<h4>２：日付検索<small>　日付を選択してください。</small></h4>
+							<h4>２：レポート作成日付検索<small>　日付を選択してください</small></h4>
 							<div class="input-group">
 								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
 								<span class="input-group-btn">
@@ -228,7 +231,8 @@
 		}]);
 
 		app.controller('mainCtrl', function($scope, $http) {
-
+			$scope.report = "";
+			$scope.date = "";
 			//レポート名称変更
 			$scope.select_report = function(){
 				//初期化
@@ -237,45 +241,49 @@
 				$scope.success = false;
 				$scope.info = false;
 				$scope.danger = false;
+				if ($scope.report != "") {
+					//urlを定義
+					var url = "http://localhost:9000/search?";
+					console.log("$scope.report :" + $scope.report);
 
-				//urlを定義
-				var url = "http://localhost:9000/search?";
-				console.log("$scope.report :" + $scope.report);
+					//クエリーパラメータ作成
+					var queries = "file_name=" + $scope.report;
 
-				//クエリーパラメータ作成
-				var queries = "file_name=" + $scope.report;
+					// webAPIの呼び出し
+					url = url + queries;
+					console.log("url :" + url);
+					$http({
+						url: url,
+						dataType: 'jsonp',
+						method: 'GET'
+					})
+					//webAPIの呼び出しに成功
+					.success(function(data, status, headers, config) {
+						if (data.length > 0) {
 
-				// webAPIの呼び出し
-				url = url + queries;
-				console.log("url :" + url);
-				$http({
-					url: url,
-					dataType: 'jsonp',
-					method: 'GET'
-				})
-				//webAPIの呼び出しに成功
-				.success(function(data, status, headers, config) {
-					if (data.length > 0) {
-
-						$scope.view = true; //ファイルの一覧表を表示
-						$scope.file_list = data;
-						console.log("data : " + $scope.file_list);
-						$scope.message = "該当するレコードが" + data.length + "件見つかりました。";
-						$scope.success = true;
-					} else {
-						$scope.message = "該当するレコードが見つかりません。";
-						$scope.info = true;
-					}
-				})
-				//webAPIの呼び出しに失敗
-				.error(function(data, status, headers, config){
-					console.log("失敗");
-					console.log("headers : " + headers);
-					console.log("status : " + status);
-					console.log("config : " + config);
-					$scope.message = "サーバとの通信に失敗しました。";
+							$scope.view = true; //ファイルの一覧表を表示
+							$scope.file_list = data;
+							console.log("data : " + $scope.file_list);
+							$scope.message = "該当するレコードが" + data.length + "件見つかりました";
+							$scope.success = true;
+						} else {
+							$scope.message = "該当するレコードが見つかりません";
+							$scope.info = true;
+						}
+					})
+					//webAPIの呼び出しに失敗
+					.error(function(data, status, headers, config){
+						console.log("失敗");
+						console.log("headers : " + headers);
+						console.log("status : " + status);
+						console.log("config : " + config);
+						$scope.message = "サーバとの通信に失敗しました";
+						$scope.danger = true;
+					});
+				} else {
+					$scope.message = "ファイル名を設定してください";
 					$scope.danger = true;
-				});
+				}
 			};
 
 
@@ -289,50 +297,54 @@
 				$scope.info = false;
 				$scope.danger = false;
 
-				//dateをyyyymmddフォーマットへ変換
-				console.log("$scope.date :" + $scope.date);
+				if ($scope.date != "") {
+					//dateをyyyymmddフォーマットへ変換
+					console.log("$scope.date :" + $scope.date);
 
-				//urlを定義
-				var url = "http://localhost:9000/search?";
+					//urlを定義
+					var url = "http://localhost:9000/search?";
 
-				//クエリーパラメータ作成
-				var queries = "file_date=" + $scope.date;
+					//クエリーパラメータ作成
+					var queries = "file_date=" + $scope.date;
 
-				// webAPIの呼び出し
-				url = url + queries;
-				console.log("url :" + url);
-				$http({
-					url: url,
-					dataType: 'jsonp',
-					method: 'GET'
-				})
-				//webAPIの呼び出しに成功
-				.success(function(data, status, headers, config) {
-					if (data.length > 0) {
-						console.log("data : " + $scope.file_list);
-						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
-						$scope.file_list = data;
-						$scope.view = true; //ファイルの一覧表を表示
-						$scope.success = true;
-					} else {
-						$scope.message = "該当するレコードが見つかりません。";
-						$scope.info = true;
-					}
-				})
-				//webAPIの呼び出しに失敗
-				.error(function(data, status, headers, config){
-					console.log("失敗");
-					console.log("headers : " + headers);
-					console.log("status : " + status);
-					console.log("config : " + config);
-					$scope.message = "サーバとの通信に失敗しました。";
+					// webAPIの呼び出し
+					url = url + queries;
+					console.log("url :" + url);
+					$http({
+						url: url,
+						dataType: 'jsonp',
+						method: 'GET'
+					})
+					//webAPIの呼び出しに成功
+					.success(function(data, status, headers, config) {
+						if (data.length > 0) {
+							console.log("data : " + $scope.file_list);
+							$scope.message = "該当するレコードが" + data.length + "件見つかりました"
+							$scope.file_list = data;
+							$scope.view = true; //ファイルの一覧表を表示
+							$scope.success = true;
+						} else {
+							$scope.message = "該当するレコードが見つかりません";
+							$scope.info = true;
+						}
+					})
+					//webAPIの呼び出しに失敗
+					.error(function(data, status, headers, config){
+						console.log("失敗");
+						console.log("headers : " + headers);
+						console.log("status : " + status);
+						console.log("config : " + config);
+						$scope.message = "サーバとの通信に失敗しました";
+						$scope.danger = true;
+					});
+				} else {
+					$scope.message = "レポート作成日付を設定してください";
 					$scope.danger = true;
-				});
+				}
 			};
 
 			//レポート名＆更新日時変更
 			$scope.both_select = function(){
-
 				//初期化
 				$scope.text_line = false;　//ファイルのテキストを非表示へ
 				$scope.view = false;       //ファイルの一覧表を表示
@@ -340,46 +352,52 @@
 				$scope.info = false;
 				$scope.danger = false;
 
-				//dateをyyyymmddフォーマットへ変換
-				console.log("report :" + $scope.report);
-				console.log("date :" + $scope.date);
+				//前提確認
+				if ($scope.report != "" && $scope.date != "") {
+					//dateをyyyymmddフォーマットへ変換
+					console.log("report :" + $scope.report);
+					console.log("date :" + $scope.date);
 
-				//urlを定義
-				var url = "http://localhost:9000/search?";
+					//urlを定義
+					var url = "http://localhost:9000/search?";
 
-				//クエリーパラメータ作成
-				var queries = "file_name=" + $scope.report + "&file_date=" + $scope.date;
+					//クエリーパラメータ作成
+					var queries = "file_name=" + $scope.report + "&file_date=" + $scope.date;
 
-				// webAPIの呼び出し
-				url = url + queries;
-				console.log("url :" + url);
-				$http({
-					url: url,
-					dataType: 'jsonp',
-					method: 'GET'
-				})
-				//webAPIの呼び出しに成功
-				.success(function(data, status, headers, config) {
-					if (data.length > 0) {
-						console.log("data : " + $scope.file_list);
-						$scope.message = "該当するレコードが" + data.length + "件見つかりました。"
-						$scope.file_list = data;
-						$scope.view = true; //ファイルの一覧表を表示
-						$scope.success = true;
-					} else {
-						$scope.message = "該当するレコードが見つかりません。";
-						$scope.info = true;
-					}
-				})
-				//webAPIの呼び出しに失敗
-				.error(function(data, status, headers, config){
-					console.log("失敗");
-					console.log("headers : " + headers);
-					console.log("status : " + status);
-					console.log("config : " + config);
-					$scope.message = "サーバとの通信に失敗しました。";
+					// webAPIの呼び出し
+					url = url + queries;
+					console.log("url :" + url);
+					$http({
+						url: url,
+						dataType: 'jsonp',
+						method: 'GET'
+					})
+					//webAPIの呼び出しに成功
+					.success(function(data, status, headers, config) {
+						if (data.length > 0) {
+							console.log("data : " + $scope.file_list);
+							$scope.message = "該当するレコードが" + data.length + "件見つかりました"
+							$scope.file_list = data;
+							$scope.view = true; //ファイルの一覧表を表示
+							$scope.success = true;
+						} else {
+							$scope.message = "該当するレコードが見つかりません";
+							$scope.info = true;
+						}
+					})
+					//webAPIの呼び出しに失敗
+					.error(function(data, status, headers, config){
+						console.log("失敗");
+						console.log("headers : " + headers);
+						console.log("status : " + status);
+						console.log("config : " + config);
+						$scope.message = "サーバとの通信に失敗しました";
+						$scope.danger = true;
+					});
+				} else {
+					$scope.message = "レポート名とレポート作成日付両方の値を設定してください";
 					$scope.danger = true;
-				});
+				}
 			};
 			//アラートメッセージ判定の初期化
 			$scope.alert_init = function(){
@@ -431,6 +449,7 @@
 					// Unicodeコードポイントの配列に変換する
 					var unicode_array = str_to_unicode_array(data);
 					// SJISコードポイントの配列に変換
+					//   encoding.jsが必要。しかし、テキストの内容はすべて英数字なので必要ないと判断
 					//var sjis_code_array = Encoding.convert( unicode_array, 'SJIS', 'UNICODE');
 					// 文字コード配列をTypedArrayに変換する
 					//var uint8_array = new Uint8Array(sjis_code_array);
@@ -438,7 +457,7 @@
 					// 指定されたデータを保持するBlobを作成する
 					var blob = new Blob([uint8_array], {type:'text/plain'});
 					console.log("blob :" + blob);
-					// Aタグのhref属性にBlobオブジェクトを設定し、リンクを生成
+					// Aタグのhref属性にBlobオブジェクトを設定し、Blob URLリンクを生成
 					window.URL = window.URL || window.webkitURL.createObjectURL(blob);
 					document.getElementById("download").href = window.URL.createObjectURL(blob);
 					document.getElementById("download").download = $scope.file_name;

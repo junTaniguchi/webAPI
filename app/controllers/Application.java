@@ -42,18 +42,32 @@ public class Application extends Controller {
     	//POSTメソッドのパラメータを取得。
     	//Map<String, String[]> queryStrings = request().body().asFormUrlEncoded();
 
-      if (queryStrings.containsKey("file_name")) {
-		      System.out.println("file_name Search");
-          try {
-            searchFile.recursionSearchFileName(queryStrings.get("file_name")[0]);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+      //ファイルを各条件にて検索
+      if (queryStrings.containsKey("file_name") && queryStrings.containsKey("file_path")){
+        //ファイルをファイル名と更新日時にて検索
+        System.out.println("Dual Search");
+        try{
+          searchFile.recursionSearchDual(queryStrings.get("file_name")[0], queryStrings.get("file_date")[0]);
+        } catch (IOException e) {
+          System.out.println("失敗");
+          e.printStackTrace();
+        }
+      } else if (queryStrings.containsKey("file_name")) {
+        //ファイルをファイル名にて検索
+        System.out.println("file_name Search");
+        try {
+          searchFile.recursionSearchFileName(queryStrings.get("file_name")[0]);
+        } catch (IOException e) {
+          System.out.println("失敗");
+          e.printStackTrace();
+        }
       } else if (queryStrings.containsKey("file_date")) {
+        //ファイルを更新日時にて検索
         System.out.println("file_date Search");
         try {
           searchFile.recursionSearchTargetDate(queryStrings.get("file_date")[0]);
         } catch (IOException e) {
+          System.out.println("失敗");
           e.printStackTrace();
         }
       } else {
