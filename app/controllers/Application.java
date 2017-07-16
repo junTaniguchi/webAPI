@@ -8,8 +8,7 @@ import models.SearchFile;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.index;
-import views.html.top;
+import views.html.*;
 
 
 
@@ -18,7 +17,10 @@ public class Application extends Controller {
     public static Result index() {
         return ok(index.render("Your new application is ready."));
     }
-
+    
+    public static Result login() {
+    	return ok(login.render());
+    }
 
     public static Result top() {
     	return ok(top.render());

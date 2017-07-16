@@ -8,23 +8,31 @@ function str_to_unicode_array( str ){
 };
 
 var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
-  app.controller('modalCtrl', [ '$scope', '$uibModal', function(){
-    //モーダルダイアログ生成
-    $scope.login = function(){
-      $scope.user = {};
-      $uibModal.open({
-        template: "userForm",
-        backdrop: 'static',
-        scope: $scope
+  app.controller('ModalInstanceCtrl', function($uibModalInstance, items) {
+    alert("ModalInstanceCtrl");
+  })
+  app.controller('mainCtrl', function($scope, $uibModal, $http) {
+    /*
+    (function hoge(){
+      //モーダルダイアログを呼び出す
+      var modalInstance = $uibModal.open({
+        //$scope.user = {};
+        $uibModal.open({
+          templateUrl: "T_login_form.html",
+          backdrop: 'static',
+          controller: 'ModalInstanceCtrl',
+          scope: $scope
+        });
       });
-    };
-  }]);
-
-  app.controller('mainCtrl', function($scope, $http) {
+    }());
+    */
     $scope.report = "";
     $scope.date = "";
     //レポート名称変更
     $scope.select_report = function(){
+
+      //ログイン
+
       //初期化
       $scope.text_line = false;　//ファイルのテキストを非表示へ
       $scope.view = false;       //ファイルの一覧表を表示
@@ -248,6 +256,7 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
         console.log("blob :" + blob);
         // Aタグのhref属性にBlobオブジェクトを設定し、Blob URLリンクを生成
         window.URL = window.URL || window.webkitURL.createObjectURL(blob);
+        console.log("window.URL : " + window.URL);
         document.getElementById("download").href = window.URL.createObjectURL(blob);
         document.getElementById("download").download = $scope.file_name;
       })

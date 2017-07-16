@@ -19,7 +19,7 @@
 	</head>
 
 	<!-- Modal for newGuestForm -->
-	<script type="text/ng-template" id="T_login_form">
+	<script type="text/ng-template" id="T_login_form.html">
 		<div class="modal-header">
 			<h3>ユーザ確認</h3>
 			<small>CC-Quattroの画面へアクセスできるアカウントでログインできます</small>
@@ -65,7 +65,7 @@
 								<option value="EP103.txt">EP103</option>
 							</select>
 							<span class="input-group-btn">
-								<button class="btn btn-primary" ng-click="select_report()">検索
+								<button class="btn btn-info" ng-click="select_report()">検索
 								<i class='glyphicon glyphicon-search'></i>
 								</button>
 							</span>
@@ -74,13 +74,13 @@
 						<div class="input-group">
 							<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
 							<span class="input-group-btn">
-								<button class="btn btn-primary" ng-click="select_date()">検索
+								<button class="btn btn-info" ng-click="select_date()">検索
 								<i class='glyphicon glyphicon-search'></i>
 								</button>
 							</span>
 						</div>
 						<br>
-						<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
+						<button class="btn btn-info right" ng-click="both_select()">両方の条件で検索
 						<i class='glyphicon glyphicon-search'></i>
 						</button>
 						<br>
@@ -101,7 +101,7 @@
 									<tr ng-repeat="file in file_list" class="animated">
 										<td ng-cloak>{{file.file_name}}</td>
 										<td ng-cloak>{{file.file_date}}</td>
-										<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
+										<td><button class="btn btn-info" ng-click="text_check(file)">レポート確認
 											</button>
 										</td>
 									</tr>
@@ -112,12 +112,12 @@
 					<div class="col-md-7 panel panel-default" ng-show="text_line" when-scrolled='loadMore()'>
 						<h4 ng-init="text_line_init()">  レポート詳細</h4>
 						<div ng-init="text_line_init()" class="panel-heading row">
-							<div class="col-md-3">
+							<div class="col-md-5">
 								<p>レポート名：<strong>{{file_name}}</strong></p>
 								<p>作成日時　：<strong>{{file_date}}</strong></p>
 							</div>
 							<br>
-							<div class="col-md-offset-6 col-md-2">
+							<div class="col-md-offset-4 col-md-2">
 								<a id="download" class="btn btn-info btn-lg" ng-init="text_line_init()" ng-click="download()" ng-show="text_line">ダウンロード
 								<i class='glyphicon glyphicon-download-alt'></i>
 								</a>

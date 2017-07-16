@@ -9,6 +9,9 @@ GET     /                           controllers.Application.index()
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 #index
+GET     /login                      controllers.Application.login()
+
+#index
 GET     /top                        controllers.Application.top()
 
 #webAPI
