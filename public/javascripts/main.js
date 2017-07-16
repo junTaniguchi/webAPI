@@ -10,7 +10,7 @@ function str_to_unicode_array( str ){
 var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
   app.controller('modalCtrl', [ '$scope', '$uibModal', function(){
     //モーダルダイアログ生成
-    $scope.open_login_modal = function(){
+    $scope.login = function(){
       $scope.user = {};
       $uibModal.open({
         template: "userForm",

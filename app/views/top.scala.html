@@ -17,97 +17,124 @@
 		<script type="text/javascript" src="/assets/javascripts/ui-bootstrap-tpls-2.5.0.min.js"></script>
 		<script type="text/javascript" src="/assets/javascripts/main.js"></script>
 	</head>
+
+	<!-- Modal for newGuestForm -->
+	<script type="text/ng-template" id="T_login_form">
+		<div class="modal-header">
+			<h3>ユーザ確認</h3>
+			<small>CC-Quattroの画面へアクセスできるアカウントでログインできます</small>
+		</div>
+		<div class="modal-body">
+			<form role="form">
+				<div class="form-group">
+					<h4>ユーザ名</h4>
+					<input ng-model="user.name" type="text" class="form-control" placeholder="ユーザ名" />
+				</div>
+				<div class="form-group">
+					<h4>パスワード</h4>
+					<input ng-model="user.password" type="password" class="form-control" placeholder="パスワード" />
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" ng-click="login()">作成
+			<i class='glyphicon glyphicon-search'></i>
+			</button>
+		</div>
+	</script>
+	<!-- Modal for newGuestForm-->
+
 	<body>
 		<h1>Edit Package Report Search</h1>
-			<div ng-controller="mainCtrl">
-				<div class="row">
-					<div class="col-md-4">
-						<p>下記いずれかの方法で検索してください</p>
-					</div>
-				</div>
-				<div class="row" id="search">
-					<section>
-						<div class="col-md-4">
-							<h4>１：レポート名検索<small>　閲覧するレポートを選択してください</small></h4>
-							<div class="input-group">
-								<select ng-model="report" id="report" class="form-control">
-									<option value="">ファイル選択なし</option>
-									<option value="EP100.txt">EP100</option>
-									<option value="EP101.txt">EP101</option>
-									<option value="EP102.txt">EP102</option>
-									<option value="EP103.txt">EP103</option>
-								</select>
-								<span class="input-group-btn">
-									<button class="btn btn-primary" ng-click="select_report()">検索
-									<i class='glyphicon glyphicon-search'></i>
-									</button>
-								</span>
-							</div>
-							<h4>２：レポート作成日付検索<small>　8桁の日付(yyyymmdd)を選択してください</small></h4>
-							<div class="input-group">
-								<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
-								<span class="input-group-btn">
-									<button class="btn btn-primary" ng-click="select_date()">検索
-									<i class='glyphicon glyphicon-search'></i>
-									</button>
-								</span>
-							</div>
-							<br>
-							<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
-							<i class='glyphicon glyphicon-search'></i>
-							</button>
-							<br>
-							<strong><div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div></strong>
-							<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
-							<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
-							<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
-							<div class="height_limit" when-scrolled='loadMore()'>
-								<table class="table table-hover" ng-init="view_init()" ng-show="view">
-									<thead>
-										<tr>
-											<th>ファイル名</th>
-											<th>更新日時</th>
-											<th>テキスト</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr ng-repeat="file in file_list" class="animated">
-											<td ng-cloak>{{file.file_name}}</td>
-											<td ng-cloak>{{file.file_date}}</td>
-											<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div class="col-md-7 panel panel-default" ng-show="text_line" when-scrolled='loadMore()'>
-							<h4 ng-init="text_line_init()">  レポート詳細</h4>
-							<div ng-init="text_line_init()" class="panel-heading row">
-								<div class="col-md-3">
-									<p>レポート名：<strong>{{file_name}}</strong></p>
-									<p>作成日時　：<strong>{{file_date}}</strong></p>
-								</div>
-								<br>
-								<div class="col-md-offset-6 col-md-2">
-									<a id="download" class="btn btn-info btn-lg" ng-init="text_line_init()" ng-click="download()" ng-show="text_line">ダウンロード
-									<i class='glyphicon glyphicon-download-alt'></i>
-									</a>
-								</div>
-							</div>
-							<div class="panel-body" ng-init="text_line_init()">
-								<table class="report_text">
-									<tbody>
-										<tr ng-repeat="text in text_lines track by $index" class="animated">
-											<td ng-cloak>{{text}}<br></td>
-										</tr>
-									<tbody>
-								</table>
-							</div>
-						</div>
-					</section>
+		<div ng-controller="mainCtrl">
+			<div class="row">
+				<div class="col-md-4">
+					<p>下記いずれかの方法で検索してください</p>
 				</div>
 			</div>
+			<div class="row" id="search">
+				<section>
+					<div class="col-md-4">
+						<h4>１：レポート名検索<small>　閲覧するレポートを選択してください</small></h4>
+						<div class="input-group">
+							<select ng-model="report" id="report" class="form-control">
+								<option value="">ファイル選択なし</option>
+								<option value="EP100.txt">EP100</option>
+								<option value="EP101.txt">EP101</option>
+								<option value="EP102.txt">EP102</option>
+								<option value="EP103.txt">EP103</option>
+							</select>
+							<span class="input-group-btn">
+								<button class="btn btn-primary" ng-click="select_report()">検索
+								<i class='glyphicon glyphicon-search'></i>
+								</button>
+							</span>
+						</div>
+						<h4>２：レポート作成日付検索<small>　8桁の日付(yyyymmdd)を選択してください</small></h4>
+						<div class="input-group">
+							<input type="text" ng-model="date" id="date" class="form-control" placeholder="yyyymmdd">
+							<span class="input-group-btn">
+								<button class="btn btn-primary" ng-click="select_date()">検索
+								<i class='glyphicon glyphicon-search'></i>
+								</button>
+							</span>
+						</div>
+						<br>
+						<button class="btn btn-primary right" ng-click="both_select()">両方の条件で検索
+						<i class='glyphicon glyphicon-search'></i>
+						</button>
+						<br>
+						<strong><div ng-init="alert_init()" class="alert alert-success" role="alert" ng-show="success" ng-bind="message"></div></strong>
+						<strong><div ng-init="alert_init()" class="alert alert-info"    role="alert" ng-show="info"    ng-bind="message"></div></strong>
+						<strong><div ng-init="alert_init()" class="alert alert-danger"  role="alert" ng-show="danger"  ng-bind="message"></div></strong>
+						<h4 ng-init="view_init()" ng-show="view">検索結果</h4>
+						<div class="height_limit" when-scrolled='loadMore()'>
+							<table class="table table-hover" ng-init="view_init()" ng-show="view">
+								<thead>
+									<tr>
+										<th>ファイル名</th>
+										<th>更新日時</th>
+										<th>テキスト</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="file in file_list" class="animated">
+										<td ng-cloak>{{file.file_name}}</td>
+										<td ng-cloak>{{file.file_date}}</td>
+										<td><button class="btn btn-primary" ng-click="text_check(file)">レポート確認
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-7 panel panel-default" ng-show="text_line" when-scrolled='loadMore()'>
+						<h4 ng-init="text_line_init()">  レポート詳細</h4>
+						<div ng-init="text_line_init()" class="panel-heading row">
+							<div class="col-md-3">
+								<p>レポート名：<strong>{{file_name}}</strong></p>
+								<p>作成日時　：<strong>{{file_date}}</strong></p>
+							</div>
+							<br>
+							<div class="col-md-offset-6 col-md-2">
+								<a id="download" class="btn btn-info btn-lg" ng-init="text_line_init()" ng-click="download()" ng-show="text_line">ダウンロード
+								<i class='glyphicon glyphicon-download-alt'></i>
+								</a>
+							</div>
+						</div>
+						<div class="panel-body" ng-init="text_line_init()">
+							<table class="report_text">
+								<tbody>
+									<tr ng-repeat="text in text_lines track by $index" class="animated">
+										<td ng-cloak>{{text}}<br></td>
+									</tr>
+								<tbody>
+							</table>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
 	</body>
 </html>
