@@ -6,26 +6,57 @@ function str_to_unicode_array( str ){
   }
   return arr;
 };
-
 var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
-  app.controller('ModalInstanceCtrl', function($uibModalInstance, items) {
-    alert("ModalInstanceCtrl");
-  })
+
+  app.controller('ModalInstanceCtrl', function($scope, $uibModalInstance, $http){
+    $scope.login_init = function(){
+      $scope.login_error  = false;
+      $scope.access_error = false;
+    }
+    $scope.login = function(user) {
+
+      var url = "http://localhost:9000/authenticate";
+      console.log(url);
+      var data = new Object();
+
+      $http({
+        method:'POST',
+        dataType: 'json',
+        url:url,
+        headers: {'Content-Type': 'application/json'},
+        data: user,
+      })
+      .success(function(data, status, headers, config){
+        console.log('通信成功！');
+        if (data == "true"){
+          $uibModalInstance.close();
+        } else {
+          $scope.login_error  = true;
+        }
+      })
+      .error(function(data, status, headers, config){
+        console.log('通信失敗！');
+        $scope.access_error = true;
+      });
+
+    }
+  });
+
   app.controller('mainCtrl', function($scope, $uibModal, $http) {
-    /*
+    //即時関数で呼び出す
     (function hoge(){
       //モーダルダイアログを呼び出す
       var modalInstance = $uibModal.open({
-        //$scope.user = {};
-        $uibModal.open({
+          //$scope.user = {};
           templateUrl: "T_login_form.html",
+          size: 'md',
           backdrop: 'static',
           controller: 'ModalInstanceCtrl',
+          windowClass: 'app-modal-window',
           scope: $scope
         });
-      });
     }());
-    */
+
     $scope.report = "";
     $scope.date = "";
     //レポート名称変更

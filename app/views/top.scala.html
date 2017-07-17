@@ -20,26 +20,31 @@
 
 	<!-- Modal for newGuestForm -->
 	<script type="text/ng-template" id="T_login_form.html">
-		<div class="modal-header">
-			<h3>ユーザ確認</h3>
-			<small>CC-Quattroの画面へアクセスできるアカウントでログインできます</small>
-		</div>
-		<div class="modal-body">
-			<form role="form">
-				<div class="form-group">
-					<h4>ユーザ名</h4>
-					<input ng-model="user.name" type="text" class="form-control" placeholder="ユーザ名" />
+		<div class=" login text-center">
+			<div class="modal-header">
+				<h2>CC-Quattro</h2><br>
+				<p>CC-Quattroの画面へアクセスできるアカウントでログインしてください</p>
+			</div>
+			<div class="modal-body">
+				<form role="form">
+					<div class="form-group">
+						<input ng-model="user.name" type="text" class="form-control" placeholder="ユーザ名" />
+						<input ng-model="user.password" type="password" class="form-control" placeholder="パスワード" />
+					</div>
+				</form>
+				<div ng-init="login_init()" class="alert alert-danger" role="alert" ng-show="login_error">
+					<strong>ERROR</strong> ユーザ名かパスワードが間違っています
 				</div>
-				<div class="form-group">
-					<h4>パスワード</h4>
-					<input ng-model="user.password" type="password" class="form-control" placeholder="パスワード" />
+				<div ng-init="login_init()" class="alert alert-danger" role="alert" ng-show="access_error">
+					<strong>ERROR</strong> 通信に失敗しました
 				</div>
-			</form>
-		</div>
-		<div class="modal-footer">
-			<button type="button" class="btn btn-default" ng-click="login()">作成
-			<i class='glyphicon glyphicon-search'></i>
-			</button>
+			<!--
+			</div>
+			<div class="modal-footer text-center">
+			-->
+				<button type="button" class="btn btn-info btn-block login" ng-click="login(user)">ログイン
+				</button>
+			</div>
 		</div>
 	</script>
 	<!-- Modal for newGuestForm-->

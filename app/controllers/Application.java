@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import models.SearchFile;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
-
+import views.html.index;
+import views.html.login;
+import views.html.top;
 
 
 public class Application extends Controller {
@@ -17,13 +21,57 @@ public class Application extends Controller {
     public static Result index() {
         return ok(index.render("Your new application is ready."));
     }
-    
+
     public static Result login() {
+      response().discardCookie("user");
     	return ok(login.render());
     }
 
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result postAuthenticate() {
+
+      System.out.println("body.asJson()    : " + request().body().asJson());
+      JsonNode json = request().body().asJson();
+      System.out.println("json    : " + json);
+      //Cookie未完成
+      if (json != null) {
+        try{
+          String name = json.findPath("name").textValue();
+          String password = json.findPath("password").textValue();
+          System.out.println("name     : " + name);
+          System.out.println("password : " + password);
+          /*
+          ConnectDatabase cd = new ConnectDatabase();
+
+          Login login = new Login();
+          boolean logincheck = login.authenticate(name, password);
+          */
+          //実験用
+          boolean logincheck = true;
+          if (logincheck) {
+            //Cookieを作成し、ステートレスセッションを行う
+            response().setCookie("name", name);
+            System.out.println("Cookie make!!");
+            //System.out.println("request().cookie(name) : " + request().cookies().get("name").value().toString());
+            return ok("true");
+            //return redirect("/top");
+          } else {
+            return ok("false");
+          }
+        } catch (Exception e) {
+          System.out.println("try failed");
+          e.printStackTrace();
+        }
+      } else {
+        System.out.println("login failed");
+      }
+      System.out.println("login failed");
+      return null;
+    }
+
     public static Result top() {
-    	return ok(top.render());
+    	//return ok(top.render());
+      return ok(top.render());
     }
 
     public static Result getSearch() {
@@ -33,6 +81,18 @@ public class Application extends Controller {
     	 *   query   ： file_name=
     	 *              file_date=
     	 * */
+       // Cookieの確認
+       /*
+       String user = request().cookies().get("user").value().toString();
+       if (user != "") {
+         //userのキーを取得
+         System.out.println(request().cookie("user").name());
+         //userの値を取得
+         System.out.println(request().cookie("user").value());
+       } else {
+         return ok(login.render());
+       }
+       */
 
     	SearchFile searchFile = new SearchFile("C:\\\\Users\\\\JunTaniguchi\\\\Desktop\\\\EP");
 
@@ -88,6 +148,18 @@ public class Application extends Controller {
     }
 
     public static Result getDownload() {
+      /*
+      // Cookieの確認
+      String user = request().cookies().get("user").value().toString();
+      if (user != "") {
+        //userのキーを取得
+        System.out.println(request().cookie("user").name());
+        //userの値を取得
+        System.out.println(request().cookie("user").value());
+      } else {
+        return ok(login.render());
+      }
+      */
       //GETメソッドのパラメータを取得。
     	Map<String, String[]> queryStrings = request().queryString();
       System.out.println("queryStrings :" + queryStrings);
@@ -104,7 +176,5 @@ public class Application extends Controller {
 
       //ファイルを転送
       return ok(downloadFile).as("text/plain");
-
     }
-
 }

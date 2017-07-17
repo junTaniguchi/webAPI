@@ -19,3 +19,6 @@ GET     /search                     controllers.Application.getSearch()
 
 #webAPI
 GET    /download                    controllers.Application.getDownload()
+
+#ajaxPOST
+POST   /authenticate                controllers.Application.postAuthenticate()
