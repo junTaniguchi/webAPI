@@ -51,6 +51,7 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
           templateUrl: "T_login_form.html",
           size: 'md',
           backdrop: 'static',
+          keyboard: false,
           controller: 'ModalInstanceCtrl',
           windowClass: 'app-modal-window',
           scope: $scope
