@@ -31,17 +31,12 @@ public class Login {
 			ConnectDatabase connectDatabase = new ConnectDatabase();
 
 			//SQLの生成
-			String query =
-					  " select username "
-					+ " from   m_user_password "
-					+ " where  username = " + username
-					+ " and    password = " + password
-					+ " ;";
+			String query = " select password from m_user_password where username = ?";
 
 			System.out.println("query = " + query);
-
+			
 			//SQLの発行
-			connectDatabase.executeSQL(query);
+			connectDatabase.selectQuery(query, password);
 
 			//SQLの結果をJSONArray形式で受け取る
 			JSONArray reultArray = connectDatabase.getResultJSON();

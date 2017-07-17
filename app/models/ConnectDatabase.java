@@ -17,7 +17,11 @@ public class ConnectDatabase {
 	//JDBCのドライバー
 	private Connection conn;
 
-	//インsタンス化と同時にDBへ接続する
+	/**
+	 * デフォルトコンストラクタ
+	 *  インスタンス化と同時にjdbcでDBへ接続を行う。
+	 *
+	*/
 	public ConnectDatabase() throws ClassNotFoundException, SQLException {
 
 		// JDBCドライバクラスをJVMに登録
@@ -29,7 +33,11 @@ public class ConnectDatabase {
 
 	}
 
-	//DBとの接続を切る
+	/**
+	 * disConnectDatabase()
+	 *  JDBC接続を切断する。
+	 *
+	*/
 	public void disConnectDatabase() {
 		try {
 			if (this.conn != null) {
@@ -41,11 +49,13 @@ public class ConnectDatabase {
 		}
 	}
 
-	//DBへSQLを発行し、結果をJSONへ変換する
-	public void executeSQL(String sqlString) throws Exception {
+	public void selectQuery(String sqlString, String where) throws Exception {
 
-		//SQL実行
+		//SQL生成
 		PreparedStatement sql = this.conn.prepareStatement(sqlString);
+		//SQLのwhere句の?へ挿入（SQLインジェクション対策）
+		sql.setInt(1, where);
+		//SQL実行
 		ResultSet resultSet = sql.executeQuery();
 		System.out.println("resultSet : " + resultSet);
 
