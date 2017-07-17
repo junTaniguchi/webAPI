@@ -12,9 +12,10 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
     $scope.login_init = function(){
       $scope.login_error  = false;
       $scope.access_error = false;
+      $scope.lording = false;
     }
     $scope.login = function(user) {
-
+      $scope.lording = true;
       var url = "http://localhost:9000/authenticate";
       console.log(url);
       var data = new Object();
@@ -38,13 +39,13 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
         console.log('通信失敗！');
         $scope.access_error = true;
       });
-
+      $scope.lording = false;
     }
   });
 
   app.controller('mainCtrl', function($scope, $uibModal, $http) {
-    //即時関数で呼び出す
-    (function hoge(){
+    //モーダルウィンドウ呼び出し関数を宣言
+    function open_modal(){
       //モーダルダイアログを呼び出す
       var modalInstance = $uibModal.open({
           //$scope.user = {};
@@ -56,14 +57,16 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
           windowClass: 'app-modal-window',
           scope: $scope
         });
-    }());
+    };
+    //モーダルウィンドウ呼び出し
+    open_modal();
 
     $scope.report = "";
     $scope.date = "";
     //レポート名称変更
     $scope.select_report = function(){
-
-      //ログイン
+      //ロード中
+      $scope.lording = true;
 
       //初期化
       $scope.text_line = false;　//ファイルのテキストを非表示へ
@@ -97,7 +100,6 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
             $scope.message = "該当するレコードが" + data.length + "件見つかりました";
             $scope.success = true;
           } else {
-            $scope.message = "該当するレコードが見つかりません";
             $scope.info = true;
           }
         })
@@ -107,17 +109,20 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
           console.log("headers : " + headers);
           console.log("status : " + status);
           console.log("config : " + config);
-          $scope.message = "サーバとの通信に失敗しました";
           $scope.danger = true;
         });
       } else {
         $scope.message = "ファイル名を設定してください";
         $scope.danger = true;
       }
+      //ロード終了
+      $scope.lording = false;
     };
 
     //更新日時変更
     $scope.select_date = function(){
+      //ロード中
+      $scope.lording = true;
 
       //初期化
       $scope.text_line = false;　//ファイルのテキストを非表示へ
@@ -153,7 +158,6 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
             $scope.view = true; //ファイルの一覧表を表示
             $scope.success = true;
           } else {
-            $scope.message = "該当するレコードが見つかりません";
             $scope.info = true;
           }
         })
@@ -163,17 +167,21 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
           console.log("headers : " + headers);
           console.log("status : " + status);
           console.log("config : " + config);
-          $scope.message = "サーバとの通信に失敗しました";
           $scope.danger = true;
         });
       } else {
         $scope.message = "レポート作成日付を設定してください";
         $scope.danger = true;
       }
+      //ロード終了
+      $scope.lording = false;
     };
 
     //レポート名＆更新日時変更
     $scope.both_select = function(){
+      //ロード中
+      $scope.lording = true;
+
       //初期化
       $scope.text_line = false;　//ファイルのテキストを非表示へ
       $scope.view = false;       //ファイルの一覧表を表示
@@ -210,7 +218,6 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
             $scope.view = true; //ファイルの一覧表を表示
             $scope.success = true;
           } else {
-            $scope.message = "該当するレコードが見つかりません";
             $scope.info = true;
           }
         })
@@ -220,14 +227,21 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
           console.log("headers : " + headers);
           console.log("status : " + status);
           console.log("config : " + config);
-          $scope.message = "サーバとの通信に失敗しました";
           $scope.danger = true;
         });
       } else {
         $scope.message = "レポート名とレポート作成日付両方の値を設定してください";
         $scope.danger = true;
       }
+
+      //ロード終了
+      $scope.lording = false;
+
     };
+    //ロード画面の初期化
+    $scope.load_init = function(){
+      $scope.lording = false;
+    }
     //アラートメッセージ判定の初期化
     $scope.alert_init = function(){
       $scope.success = false;
@@ -257,6 +271,9 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
 
     //ファイルのダウンロード
     $scope.download = function(file_name, file_path){
+      //ロード中
+      $scope.lording = true;
+
       //urlを定義
       var url = "http://localhost:9000/download?";
       //クエリーパラメータ作成
@@ -296,6 +313,10 @@ var app = angular.module('myApp', ['ngAnimate', 'ui.bootstrap']);
       .error(function(data, status, headers, config){
         console.log("失敗");
       });
+
+      //ロード終了
+      $scope.lording = false;
+
     };
   });
   //無限スクロールのコントローラ

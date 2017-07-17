@@ -54,7 +54,7 @@ public class ConnectDatabase {
 		//SQL生成
 		PreparedStatement sql = this.conn.prepareStatement(sqlString);
 		//SQLのwhere句の?へ挿入（SQLインジェクション対策）
-		sql.setInt(1, where);
+		sql.setString(1, where);
 		//SQL実行
 		ResultSet resultSet = sql.executeQuery();
 		System.out.println("resultSet : " + resultSet);
